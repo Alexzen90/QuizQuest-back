@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 
+const date = new Date().toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }).split(" ").join("-");
+
 const userSchema = mongoose.Schema({
-  pseudo: {
+  username: {
     type: String,
     required: true,
     unique: true,
@@ -21,6 +23,18 @@ const userSchema = mongoose.Schema({
     required: true
   },
   isAdmin: {
+    type: Boolean,
+    default: false
+  },
+  created_at: {
+    type: String,
+    default: date
+  },
+  updated_at: {
+    type: String,
+    default: date
+  },
+  status: {
     type: Boolean,
     default: false
   }
