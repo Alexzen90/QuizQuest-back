@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-const date = new Date().toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }).split(" ").join("-");
-
 const userSchema = mongoose.Schema({
   username: {
     type: String,
@@ -26,13 +24,16 @@ const userSchema = mongoose.Schema({
     type: Boolean,
     default: false
   },
-  created_at: {
+  profile_pic: {
     type: String,
-    default: date
+    default: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+  },
+  created_at: {
+    type: Date,
+    default: new Date(),
   },
   updated_at: {
-    type: String,
-    default: date
+    type: Date
   },
   status: {
     type: Boolean,

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-module.exports.checkDbConnection = (req, res, next) => {
+module.exports.checkConnection = (req, res, next) => {
   if (mongoose.connection.readyState === 1) {
     req.log.info('Database connected');
     next();

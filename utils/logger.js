@@ -2,9 +2,8 @@ const fs = require('fs')
 const pretty = require('pino-pretty')
 
 // Création du fichier de logs
-const logStream = fs.createWriteStream(`logs/${new Date().toLocaleString().split('/')
-  .join('-').split(':').join('-')}__${process.env.npm_lifecycle_event != 'test' 
-    ? "PRODUCTION" : "TEST"}.log`, { flags: 'a'})
+const logStream = fs.createWriteStream(`logs/${new Date().toLocaleString().split('/').join('-').split(':')
+  .join('_')}__${process.env.npm_lifecycle_event != 'test' ? "PRODUCTION" : "TESTING"}.log`, { flags: 'a'});
 
 const prettyStream = pretty()
 prettyStream.pipe(logStream)
