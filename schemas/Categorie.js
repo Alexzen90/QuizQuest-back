@@ -5,11 +5,7 @@ const ObjectId = mongoose.Types.ObjectId
 const CategorieSchema = mongoose.Schema({
   user_id: {
     type: ObjectId,
-    ref: 'User',
-    results: {
-      type: String,
-      default: '0/10'
-    }
+    ref: 'User'
   },
   name: {
     type: String,

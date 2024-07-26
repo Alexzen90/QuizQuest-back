@@ -34,6 +34,7 @@ app.use(passport.session())
 
 const UserController = require('./controllers/UserController')
 const CategorieController = require('./controllers/CategorieController')
+const QuestionController = require('./controllers/QuestionController')
 
 const DatabaseMiddleware = require('./middlewares/database')
 const LoggerMiddleware = require('./middlewares/logger')
@@ -99,14 +100,37 @@ app.get('/categories_by_filters', DatabaseMiddleware.checkConnection, passport.a
 // Création du endpoint /categorie pour la modification d'une categorie
 app.put('/categorie/:id', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), CategorieController.updateOneCategorie)
 
-// Création du endpoint /categories pour la modification de plusieurs categories
-// app.put('/categories', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), CategorieController.updateManyCategories)
-
 // Création du endpoint /categorie pour la suppression d'une categorie
 app.delete('/categorie/:id', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), CategorieController.deleteOneCategorie)
 
 // Création du endpoint /categories pour la suppression de plusieurs categories
 app.delete('/categories', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), CategorieController.deleteManyCategories)
+
+/*--------------------- Création des routes (Question - Question) ---------------------*/
+
+// Création du endpoint /question pour l'ajout d'une question
+app.post('/question', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuestionController.addOneQuestion)
+
+// Création du endpoint /questions pour l'ajout de plusieurs questions
+app.post('/questions', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuestionController.addManyQuestions)
+
+// Création du endpoint /question pour la récupération d'une question via l'id
+app.get('/question/:id', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuestionController.findOneQuestionById)
+
+// Création du endpoint /questions pour la récupération de plusieurs questions via l'idS
+app.get('/questions', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuestionController.findManyQuestionsById)
+
+// Création du endpoint /question pour la modification d'une question
+app.put('/question/:id', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuestionController.updateOneQuestion)
+
+// Création du endpoint /question pour la modification de plusieurs questions
+app.put('/questions', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuestionController.updateManyQuestions)
+
+// Création du endpoint /question pour la suppression d'une question
+app.delete('/question/:id', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuestionController.deleteOneQuestion)
+
+// Création du endpoint /questions pour la suppression de plusieurs questions
+app.delete('/questions', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuestionController.deleteManyQuestions)
 
 app.listen(Config.port, () => {
   Logger.info(`Serveur démarré sur le port ${Config.port}`)

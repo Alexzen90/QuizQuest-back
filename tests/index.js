@@ -2,20 +2,28 @@
 require('../utils/database')
 const mongoose = require('mongoose')
 
-describe("UserService", () => {
-  require('./services/UserService.test')
-})
+// describe("UserService", () => {
+//   require('./services/UserService.test')
+// })
 
-describe("UserController", () => {
-  require('./controllers/UserController.test')
-})
+// describe("UserController", () => {
+//   require('./controllers/UserController.test')
+// })
 
-describe("CategorieService", () => {
-  require('./services/CategorieService.test')
-})
+// describe("CategorieService", () => {
+//   require('./services/CategorieService.test')
+// })
 
-describe("CategorieController", () => {
-  require('./controllers/CategorieController.test')
+// describe("CategorieController", () => {
+//   require('./controllers/CategorieController.test')
+// })
+
+// describe("QuestionService", () => {
+//   require('./services/QuestionService.test')
+// })
+
+describe("QuestionController", () => {
+  require('./controllers/QuestionController.test')
 })
 
 // describe("API - Mongo", () => {

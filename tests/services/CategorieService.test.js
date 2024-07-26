@@ -10,25 +10,25 @@ var categories = []
 
 let users = [
     {
-        name: "Détenteur d'categorie 1",
+        name: "Détenteur de categorie 1",
         username: "oui1",
         email:"iencli1@gmail.com",
         password: "1234"
     },
     {
-        name: "Détenteur d'categorie 2",
+        name: "Détenteur de categorie 2",
         username: "oui2",
         email:"iencli2@gmail.com",
         password: "1234"
     },
     {
-        name: "Détenteur d'categorie 3",
+        name: "Détenteur de categorie 3",
         username: "oui3",
         email:"iencli3@gmail.com",
         password: "1234"
     },
     {
-        name: "Détenteur d'categorie 4",
+        name: "Détenteur de categorie 4",
         username: "oui4",
         email:"iencli4@gmail.com",
         password: "1234"
