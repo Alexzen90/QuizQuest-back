@@ -75,6 +75,29 @@ module.exports.findOneUserById = function (req, res) {
   });
 };
 
+// La fonction permet de chercher plusieurs utilisateurs
+module.exports.findManyUsersById = function (req, res) {
+  LoggerHttp(req, res);
+  req.log.info("Recherche de plusieurs utilisateurs", req.query.id);
+  var arg = req.query.id;
+  if (arg && !Array.isArray(arg)) arg = [arg];
+  UserService.findManyUsersById(arg, null, function (err, value) {
+    if (err && err.type_error == "no-found") {
+      res.statusCode = 404;
+      res.send(err);
+    } else if (err && err.type_error == "no-valid") {
+      res.statusCode = 405;
+      res.send(err);
+    } else if (err && err.type_error == "error-mongo") {
+      res.statusCode = 500;
+      res.send(err);
+    } else {
+      res.statusCode = 200;
+      res.send(value);
+    }
+  });
+};
+
 // La fonction permet de chercher un utilisateur par les champs autorisé
 module.exports.findOneUser = function (req, res) {
   LoggerHttp(req, res);
@@ -96,6 +119,32 @@ module.exports.findOneUser = function (req, res) {
       res.send(value);
     }
   });
+};
+
+// La fonction permet de chercher plusieurs utilisateurs
+module.exports.findManyUsers = function (req, res) {
+  req.log.info("Recherche de plusieurs utilisateurs");
+  let page = req.query.page;
+  let pageSize = req.query.pageSize;
+  let searchValue = req.query.q;
+  UserService.findManyUsers(
+    searchValue,
+    pageSize,
+    page,
+    null,
+    function (err, value) {
+      if (err && err.type_error == "no-valid") {
+        res.statusCode = 405;
+        res.send(err);
+      } else if (err && err.type_error == "error-mongo") {
+        res.statusCode = 500;
+        res.send(err);
+      } else {
+        res.statusCode = 200;
+        res.send(value);
+      }
+    }
+  );
 };
 
 
@@ -128,6 +177,34 @@ module.exports.updateOneUser = function (req, res) {
       }
     }
   );
+};
+
+// La fonction permet de modifier plusieurs utilisateurs
+module.exports.updateManyUsers = function (req, res) {
+  LoggerHttp(req, res);
+  req.log.info("Modification de plusieurs utilisateurs");
+  var arg = req.query.id;
+  if (arg && !Array.isArray(arg)) arg = [arg];
+  var updateData = req.body;
+  UserService.updateManyUsers(arg, updateData, null, function (err, value) {
+    if (err && err.type_error == "no-found") {
+      res.statusCode = 404;
+      res.send(err);
+    } else if (
+      err &&
+      (err.type_error == "no-valid" ||
+        err.type_error == "validator" ||
+        err.type_error == "duplicate")
+    ) {
+      res.statusCode = 405;
+      res.send(err);
+    } else if (err && err.type_error == "error-mongo") {
+      res.statusCode = 500;
+    } else {
+      res.statusCode = 200;
+      res.send(value);
+    }
+  });
 };
 
 // La fonction permet de supprimer un utilisateur

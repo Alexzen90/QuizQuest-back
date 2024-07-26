@@ -155,7 +155,151 @@ describe("GET - /user/:id", () => {
             done()
         })
     })
-    
+})
+
+describe("GET - /users", () => {
+    it("Chercher plusieurs utilisateurs. - S", (done) => {
+        chai.request(server).get('/users').query({id: _.map(users, '_id')})
+        .auth(token, { type: 'bearer' })
+        .end((err, res) => {
+            res.should.have.status(200)
+            expect(res.body).to.be.an('array')
+            done()
+        })
+    })
+    it("Chercher plusieurs utilisateurs sans etre authentifié. - E", (done) => {
+        chai.request(server).get('/users').query({id: _.map(users, '_id')})
+        .end((err, res) => {
+            res.should.have.status(401)
+            done()
+        })
+    })
+    it("Chercher plusieurs utilisateurs incorrects (avec un id inexistant). - E", (done) => {
+        chai.request(server).get('/users').query({id: ["66791a552b38d88d8c6e9ee7", "66791a822b38d88d8c6e9eed"]})
+        .auth(token, { type: 'bearer' })
+        .end((err, res) => {
+            res.should.have.status(404)
+            done()
+        })
+    })
+
+    it("Chercher plusieurs utilisateurs incorrects (avec un id invalide). - E", (done) => {
+        chai.request(server).get('/users').query({id: ['123', '456']})
+        .auth(token, { type: 'bearer' })
+        .end((err, res) => {
+            res.should.have.status(405)
+            done()
+        })
+    })
+})
+
+describe("GET - /user", () => {
+    it("Chercher un utilisateur par un champ selectionné. - S", (done) => {
+        chai.request(server).get('/user').query({fields: ['username'], value: users[0].username})
+        .auth(token, { type: 'bearer' })
+        .end((err, res) => {
+            res.should.have.status(200)
+            done()
+        })
+    })
+    it("Chercher un utilisateur par un champ selectionné sans etre authentifié. - E", (done) => {
+        chai.request(server).get('/user').query({fields: ['username'], value: users[0].username})
+        .end((err, res) => {
+            res.should.have.status(401)
+            done()
+        })
+    })
+    it("Chercher un utilisateur avec un champ non autorisé. - E", (done) => {
+        chai.request(server).get('/user').query({fields: ['name'], value: users[0].name})
+        .auth(token, { type: 'bearer' })
+        .end((err, res) => {
+            res.should.have.status(405)
+            done()
+        })
+    })
+
+    it("Chercher un utilisateur sans tableau de champ. - E", (done) => {
+        chai.request(server).get('/user').query({value: users[0].username})
+        .auth(token, { type: 'bearer' })
+        .end((err, res) => {
+            res.should.have.status(405)
+            done()
+        })
+    })
+
+    it("Chercher un utilisateur avec un champ vide. - E", (done) => {
+        chai.request(server).get('/user').query({fields: ['username'], value: ''})
+        .auth(token, { type: 'bearer' })
+        .end((err, res) => {
+            res.should.have.status(405)
+            done()
+        })
+    })
+
+    it("Chercher un utilisateur sans aucune querys. - E", (done) => {
+        chai.request(server).get('/user')
+        .auth(token, { type: 'bearer' })
+        .end((err, res) => {
+            res.should.have.status(405)
+            done()
+        })
+    })
+
+    it("Chercher un utilisateur inexistant. - E", (done) => {
+        chai.request(server).get('/user').query({fields: ['username'], value: 'users[0].name'})
+        .auth(token, { type: 'bearer' })
+        .end((err, res) => {
+            res.should.have.status(404)
+            done()
+        })
+    })
+})
+
+describe("GET - /users_by_filters", () => {
+    it("Chercher plusieurs utilisateurs. - S", (done) => {
+        chai.request(server).get('/users_by_filters').query({page: 1, pageSize: 2})
+        .auth(token, { type: 'bearer' })
+        .end((err, res) => {
+            res.should.have.status(200)
+            expect(res.body.results).to.be.an('array')
+            done()
+        })
+    })
+    it("Chercher plusieurs utilisateurs sans etre authentifié. - E", (done) => {
+        chai.request(server).get('/users_by_filters').query({page: 1, pageSize: 2})
+        .end((err, res) => {
+            res.should.have.status(401)
+            done()
+        })
+    })
+    it("Chercher plusieurs utilisateurs avec une query vide - S", (done) => {
+        chai.request(server).get('/users_by_filters')
+        .auth(token, { type: 'bearer' })
+        .end((err, res) => {
+            res.should.have.status(200)
+            expect(res.body.results).to.be.an('array')
+            expect(res.body.count).to.be.equal(3)
+            done()
+        })
+    })
+    it("Chercher plusieurs utilisateurs avec une query contenant une chaine de caractère - S", (done) => {
+        chai.request(server).get('/users_by_filters').query({page: 1, pageSize: 2, q: 'jo'})
+        .auth(token, { type: 'bearer' })
+        .end((err, res) => {
+            res.should.have.status(200)
+            expect(res.body.results).to.be.an('array')
+            expect(res.body.count).to.be.equal(3)
+            done()
+        })
+    })
+    it("Chercher plusieurs utilisateurs avec une chaine de caractères dans page - E", (done) => {
+        chai.request(server).get('/users_by_filters').query({page: 'une phrase', pageSize: 2})
+        .auth(token, { type: 'bearer' })
+        .end((err, res) => {
+            res.should.have.status(405)
+            done()
+        })
+    })
 })
 
 describe("PUT - /user", () => {
@@ -209,7 +353,61 @@ describe("PUT - /user", () => {
             done()
         })
     })
+})
 
+describe("PUT - /users", () => {
+    it("Modifier plusieurs utilisateurs. - S", (done) => {
+        chai.request(server).put('/users').query({id: _.map(users, '_id')}).send({ name: "lucas" })
+        .auth(token, { type: 'bearer' })
+        .end((err, res) => {
+            res.should.have.status(200)
+            done()
+        })
+    })
+    it("Modifier plusieurs utilisateurs sans etre authentifié. - E", (done) => {
+        chai.request(server).put('/users').query({id: _.map(users, '_id')}).send({ name: "lucas" })
+        .end((err, res) => {
+            res.should.have.status(401)
+            done()
+        })
+    })
+    it("Modifier plusieurs utilisateurs avec des ids invalide. - E", (done) => {
+        chai.request(server).put('/users').query({id: ['267428142', '41452828']}).send({name: "Olivier"})
+        .auth(token, { type: 'bearer' })
+        .end((err, res) => {
+            res.should.have.status(405)
+            done()
+        })
+    })
+
+    it("Modifier plusieurs utilisateurs avec des ids inexistant. - E", (done) => {
+        chai.request(server).put('/users').query({id: ['66791a552b38d88d8c6e9ee7', '667980886db560087464d3a7']})
+        .auth(token, { type: 'bearer' })
+        .send({name: "Olivier"})
+        .end((err, res) => {
+            res.should.have.status(404)
+            done()
+        })
+    })
+
+    it("Modifier des utilisateurs avec un champ requis vide. - E", (done) => {
+        chai.request(server).put('/users').query({id: _.map(users, '_id')}).send({ username: ""})
+        .auth(token, { type: 'bearer' })
+        .end((err, res) => {
+            res.should.have.status(405)
+            done()
+        })
+    })
+
+    it("Modifier des utilisateurs avec un champ unique existant. - E", (done) => {
+        chai.request(server).put('/users').query({id: _.map(users, '_id')}).send({ username: users[1].username})
+        .auth(token, { type: 'bearer' })
+        .end((err, res) => {
+            //
+            res.should.have.status(405)
+            done()
+        })
+    })
 })
 
 describe("DELETE - /user", () => {

@@ -33,6 +33,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 const UserController = require('./controllers/UserController')
+const CategorieController = require('./controllers/CategorieController')
 
 const DatabaseMiddleware = require('./middlewares/database')
 const LoggerMiddleware = require('./middlewares/logger')
@@ -51,17 +52,61 @@ app.post('/user', DatabaseMiddleware.checkConnection, UserController.addOneUser)
 // Création du endpoint /user pour l'ajout de plusieurs utilisateurs
 app.post('/users', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), UserController.addManyUsers)
 
+// Création du endpoint /user pour la récupération d'un utilisateur par le champ selectionné
+app.get('/user', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), UserController.findOneUser)
+
+// Création du endpoint /users_by_filters pour la récupération de plusieurs utilisateurs
+app.get('/users_by_filters', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), UserController.findManyUsers)
+
 // Création du endpoint /user pour la récupération d'un utilisateur via l'id
 app.get('/user/:id', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), UserController.findOneUserById)
 
+// Création du endpoint /user pour la récupération de plusieurs utilisateurs via l'idS
+app.get('/users', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), UserController.findManyUsersById)
+
 // Création du endpoint /user pour la modification d'un utilisateur
 app.put('/user/:id', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), UserController.updateOneUser)
+
+// Création du endpoint /user pour la modification de plusieurs utilisateurs
+app.put('/users', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), UserController.updateManyUsers)
 
 // Création du endpoint /user pour la suppression d'un utilisateur
 app.delete('/user/:id', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), UserController.deleteOneUser)
 
 // Création du endpoint /user pour la suppression de plusieurs utilisateurs
 app.delete('/users', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), UserController.deleteManyUsers)
+
+/*--------------------- Création des routes (Categorie - Categorie) ---------------------*/
+
+// Création du endpoint /categorie pour l'ajout d'une categorie
+app.post('/categorie', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), CategorieController.addOneCategorie)
+
+// Création du endpoint /categories pour l'ajout de plusieurs categories
+app.post('/categories', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), CategorieController.addManyCategories)
+
+// Création du endpoint /categorie pour la récupération d'une categorie via l'id
+app.get('/categorie/:id', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), CategorieController.findOneCategorieById)
+
+// Création du endpoint /categories pour la récupération de plusieurs categories via l'idS
+app.get('/categories', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), CategorieController.findManyCategoriesById)
+
+// Création du endpoint /categorie pour la récupération d'une categorie par le champ selectionné
+app.get('/categorie', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), CategorieController.findOneCategorie)
+
+// Création du endpoint /categories_by_filters pour la récupération de plusieurs categories par champ selectionné
+app.get('/categories_by_filters', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), CategorieController.findManyCategories)
+
+// Création du endpoint /categorie pour la modification d'une categorie
+app.put('/categorie/:id', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), CategorieController.updateOneCategorie)
+
+// Création du endpoint /categories pour la modification de plusieurs categories
+// app.put('/categories', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), CategorieController.updateManyCategories)
+
+// Création du endpoint /categorie pour la suppression d'une categorie
+app.delete('/categorie/:id', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), CategorieController.deleteOneCategorie)
+
+// Création du endpoint /categories pour la suppression de plusieurs categories
+app.delete('/categories', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), CategorieController.deleteManyCategories)
 
 app.listen(Config.port, () => {
   Logger.info(`Serveur démarré sur le port ${Config.port}`)

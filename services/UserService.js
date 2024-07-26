@@ -11,7 +11,7 @@ var User = mongoose.model('User', UserSchema)
 User.createIndexes()
 
 module.exports.loginUser = async function (username, password, options, callback) {
-    module.exports.findOneUser(['username', 'email'], username, null, async (err, value) => {
+    module.exports.findOneUser(['username'], username, null, async (err, value) => {
       if (err)
         callback(err)
       else {
@@ -147,6 +147,36 @@ module.exports.findOneUserById = function (user_id, options, callback) {
     }
 }
 
+module.exports.findManyUsersById = function (users_id, options, callback) {
+    
+    if (users_id && Array.isArray(users_id) && users_id.length > 0 && users_id.filter((e) => { return mongoose.isValidObjectId(e) }).length == users_id.length) {
+        users_id = users_id.map((e) => { return new ObjectId(e) })
+        User.find({ _id: users_id }).then((value) => {
+            try {
+                if (value && Array.isArray(value) && value.length != 0) {
+                    callback(null, value);
+                } else {
+                    callback({ msg: "Aucun utilisateur trouvé.", type_error: "no-found" });
+                }
+            }
+            catch (e) {
+                
+            }
+        }).catch((err) => {
+            callback({ msg: "Impossible de chercher l'élément.", type_error: "error-mongo" });
+        });
+    }
+    else if (users_id && Array.isArray(users_id) && users_id.length > 0 && users_id.filter((e) => { return mongoose.isValidObjectId(e) }).length != users_id.length) {
+        callback({ msg: "Tableau non conforme plusieurs éléments ne sont pas des ObjectId.", type_error: 'no-valid', fields: users_id.filter((e) => { return !mongoose.isValidObjectId(e) }) });
+    }
+    else if (users_id && !Array.isArray(users_id)) {
+        callback({ msg: "L'argument n'est pas un tableau.", type_error: 'no-valid' });
+    }
+    else {
+        callback({ msg: "Tableau non conforme.", type_error: 'no-valid' });
+    }
+}
+
 module.exports.findOneUser = function (tab_field, value, options, callback) {
     var field_unique = ['username', 'email']
     
@@ -185,6 +215,31 @@ module.exports.findOneUser = function (tab_field, value, options, callback) {
     }
 }
 
+module.exports.findManyUsers = function(search, limit, page, options, callback) {
+    page = !page ? 1 : parseInt(page)
+    limit = !limit ? 10 : parseInt(limit)
+    if (typeof page !== "number" || typeof limit !== "number" || isNaN(page) || isNaN(limit)) {
+        callback ({msg: `format de ${typeof page !== "number" ? "page" : "limit"} est incorrect`, type_error: "no-valid"})
+    }else{
+        let query_mongo = search ? {$or: _.map(["name", "username", "email"], (e) => {return {[e]: {$regex: search}}})} : {}
+        User.countDocuments(query_mongo).then((value) => {
+            if (value > 0) {
+                const skip = ((page - 1) * limit)
+                User.find(query_mongo, null, {skip:skip, limit:limit}).then((results) => {
+                    callback(null, {
+                        count: value,
+                        results: results
+                    })
+                })
+            }else{
+                callback(null, {count: 0, results: []})
+            }
+        }).catch((e) => {
+            callback(e)
+        })
+    }
+}
+
 module.exports.updateOneUser = async function (user_id, update, options, callback) {
     update.updated_at = new Date()
 
@@ -210,6 +265,59 @@ module.exports.updateOneUser = async function (user_id, update, options, callbac
                 const duplicateErrors = {
                     msg: `Duplicate key error: ${field} must be unique.`,
                     fields_with_error: [field],
+                    fields: { [field]: `The ${field} is already taken.` },
+                    type_error: "duplicate"
+                };
+                callback(duplicateErrors)
+            }else {
+                errors = errors['errors']
+                var text = Object.keys(errors).map((e) => {
+                    return errors[e]['properties']['message']
+                }).join(' ')
+                var fields = _.transform(Object.keys(errors), function (result, value) {
+                    result[value] = errors[value]['properties']['message'];
+                }, {});
+                var err = {
+                    msg: text,
+                    fields_with_error: Object.keys(errors),
+                    fields: fields,
+                    type_error: "validator"
+                }
+                callback(err)
+            }
+        })
+    }
+    else {
+        callback({ msg: "Id invalide.", type_error: 'no-valid' })
+    }
+}
+
+module.exports.updateManyUsers = async function (users_id, update, options, callback) {
+    // 
+    if (users_id && Array.isArray(users_id) && users_id.length > 0 && users_id.filter((e) => { return mongoose.isValidObjectId(e) }).length == users_id.length) {
+        const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
+        if(update && update.password)
+            update.password = await bcrypt.hash(update.password, salt);
+        users_id = users_id.map((e) => { return new ObjectId(e) })
+        User.updateMany({ _id: users_id }, update, { runValidators: true }).then((value) => {
+            try {
+                // 
+                if(value && value.matchedCount != 0){
+                    callback(null, value)
+                }else {
+                    callback({msg: 'Utilisateurs non trouvé', type_error: 'no-found'})
+                }
+            } catch (e) {
+                
+                callback(e)
+            }
+        }).catch((errors) => {
+            if(errors.code === 11000){
+                var field = Object.keys(errors.keyPattern)[0]
+                const duplicateErrors = {
+                    msg: `Duplicate key error: ${field} must be unique.`,
+                    fields_with_error: [field],
+                    index: errors.index,
                     fields: { [field]: `The ${field} is already taken.` },
                     type_error: "duplicate"
                 };

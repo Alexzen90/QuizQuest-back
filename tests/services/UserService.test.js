@@ -128,6 +128,66 @@ describe("findOneUserById", () => {
     })
 })
 
+describe("findManyUsersById", () => {
+    it("Chercher des utilisateurs existant correct. - S", (done) => {
+        UserService.findManyUsersById(tab_id_users, null, function (err, value) {
+            expect(value).lengthOf(3)
+            done()
+
+        })
+    })
+})
+
+describe("findOneUser", () => {
+    it("Chercher un utilisateur par les champs selectionnées. - S", (done) => {
+        UserService.findOneUser(["email", "username"], users[0].username, null, function (err, value) {
+            expect(value).to.haveOwnProperty('username')
+            done()
+
+        })
+    })
+    it("Chercher un utilisateur avec un champ non autorisé. - E", (done) => {
+        UserService.findOneUser(["email", "firstName"], users[0].username, null, function (err, value) {
+            expect(err).to.haveOwnProperty('type_error')
+            done()
+        })
+    })
+    it("Chercher un utilisateur sans tableau de champ. - E", (done) => {
+        UserService.findOneUser("email", users[0].username, null, function (err, value) {
+            expect(err).to.haveOwnProperty('type_error')
+            done()
+        })
+    })
+    it("Chercher un utilisateur inexistant. - E", (done) => {
+        UserService.findOneUser(["email"], "users[0].username", null, function (err, value) {
+            expect(err).to.haveOwnProperty('type_error')
+            done()
+        })
+    })
+})
+
+describe("findManyUsers", () => {
+    it("Retourne 4 utilisateurs - S", (done) => {
+        UserService.findManyUsers(null, 3, 1, null, function (err, value) {
+            console.log(value)
+            expect(value).to.haveOwnProperty("count")
+            expect(value).to.haveOwnProperty("results")
+            expect(value["count"]).to.be.equal(4)
+            expect(value["results"]).lengthOf(3)
+            expect(err).to.be.null
+            done()
+        })
+    })
+    it("Envoie d'une chaine de caractère a la place de la page - E", (done) => {
+        UserService.findManyUsers(null, "coucou", 3, null, function (err, value) {
+            expect(err).to.haveOwnProperty("type_error")
+            expect(err["type_error"]).to.be.equal("no-valid")
+            expect(value).to.undefined
+            done()
+        })
+    })
+})
+
 describe("updateOneUser", () => {
     it("Modifier un utilisateur correct. - S", (done) => {
         UserService.updateOneUser(id_user_valid, { username: "dragon3000", name: "cracheurdefeu" }, null, function (err, value) {
@@ -156,6 +216,38 @@ describe("updateOneUser", () => {
             expect(err).to.haveOwnProperty('fields_with_error').with.lengthOf(1)
             expect(err).to.haveOwnProperty('fields')
             expect(err['fields']).to.haveOwnProperty('username')
+            expect(err['fields']['username']).to.equal('Path `username` is required.')
+            done()
+        })
+    })
+})
+
+describe("updateManyUsers", () => {
+    it("Modifier plusieurs utilisateurs correctement. - S", (done) => {
+        UserService.updateManyUsers(tab_id_users, { name: "Jean" }, null, function (err, value) {
+            expect(value).to.haveOwnProperty('modifiedCount')
+            expect(value).to.haveOwnProperty('matchedCount')
+            expect(value['matchedCount']).to.be.equal(tab_id_users.length)
+            expect(value['modifiedCount']).to.be.equal(tab_id_users.length)
+            done()
+
+        })
+    })
+    it("Modifier plusieurs utilisateurs avec id incorrect. - E", (done) => {
+        UserService.updateManyUsers("1200", { name: "Jean" }, null, function (err, value) {
+            expect(err).to.be.a('object')
+            expect(err).to.haveOwnProperty('msg')
+            expect(err).to.haveOwnProperty('type_error')
+            expect(err['type_error']).to.be.equal('no-valid')
+            done()
+        })
+    })
+    it("Modifier plusieurs utilisateurs avec des champs requis vide. - E", (done) => {
+        UserService.updateManyUsers(tab_id_users, { username: "", name: "Luc" }, null, function (err, value) {
+            expect(value).to.be.undefined
+            expect(err).to.haveOwnProperty('msg')
+            expect(err).to.haveOwnProperty('fields_with_error').with.lengthOf(1)
+            expect(err).to.haveOwnProperty('fields')
             expect(err['fields']['username']).to.equal('Path `username` is required.')
             done()
         })
