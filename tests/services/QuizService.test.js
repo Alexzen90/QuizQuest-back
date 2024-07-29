@@ -283,7 +283,7 @@ describe("addOneQuiz", () => {
 
 describe("addManyQuizzes", () => {
   it("Quizzes à ajouter, valide. - S", (done) => {
-      var questions_tab = [{
+      var quizzes_tab = [{
         created_by: rdm_user(tab_id_users),
             name: "test1",
             categorie: "Manga/Anime",
@@ -478,7 +478,7 @@ describe("addManyQuizzes", () => {
             }
       }]
 
-      QuizService.addManyQuizzes(questions_tab, null, function (err, value) {
+      QuizService.addManyQuizzes(quizzes_tab, null, function (err, value) {
           tab_id_quizzes = _.map(value, '_id')
           quizzes = [...value, ...quizzes]
           expect(value).lengthOf(3)

@@ -369,7 +369,7 @@ describe("PUT - /questions", () => {
   })
 
   it("Modifier des questions avec un champ unique existant. - E", (done) => {
-      chai.request(server).put('/questions').query({id: _.map(questions, '_id')}).send({ question: users[1].username})
+      chai.request(server).put('/questions').query({id: _.map(questions, '_id')}).send({ question: questions[1].question })
       .auth(token, { type: 'bearer' })
       .end((err, res) => {
           res.should.have.status(405)

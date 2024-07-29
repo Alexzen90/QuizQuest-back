@@ -26,8 +26,12 @@ const mongoose = require('mongoose')
 //   require('./controllers/QuestionController.test')
 // })
 
-describe("QuizService", () => {
-  require('./services/QuizService.test') 
+// describe("QuizService", () => {
+//   require('./services/QuizService.test') 
+// })
+
+describe("QuizController", () => {
+  require('./controllers/QuizController.test')
 })
 
 // describe("API - Mongo", () => {

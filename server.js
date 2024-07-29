@@ -35,6 +35,7 @@ app.use(passport.session())
 const UserController = require('./controllers/UserController')
 const CategorieController = require('./controllers/CategorieController')
 const QuestionController = require('./controllers/QuestionController')
+const QuizController = require('./controllers/QuizController')
 
 const DatabaseMiddleware = require('./middlewares/database')
 const LoggerMiddleware = require('./middlewares/logger')
@@ -131,6 +132,32 @@ app.delete('/question/:id', DatabaseMiddleware.checkConnection, passport.authent
 
 // Création du endpoint /questions pour la suppression de plusieurs questions
 app.delete('/questions', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuestionController.deleteManyQuestions)
+
+/*--------------------- Création des routes (Quiz - Quiz) ---------------------*/
+
+// Création du endpoint /quiz pour l'ajout d'un quiz
+app.post('/quiz', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuizController.addOneQuiz)
+
+// Création du endpoint /quizs pour l'ajout de plusieurs quizzes
+app.post('/quizzes', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuizController.addManyQuizzes)
+
+// Création du endpoint /quiz pour la récupération d'un quiz via l'id
+app.get('/quiz/:id', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuizController.findOneQuizById)
+
+// Création du endpoint /quizs pour la récupération de plusieurs quizzes via l'idS
+app.get('/quizzes', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuizController.findManyQuizzesById)
+
+// Création du endpoint /quiz pour la modification d'un quiz
+app.put('/quiz/:id', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuizController.updateOneQuiz)
+
+// Création du endpoint /quiz pour la modification de plusieurs quizzes
+app.put('/quizzes', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuizController.updateManyQuizzes)
+
+// Création du endpoint /quiz pour la suppression d'un quiz
+app.delete('/quiz/:id', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuizController.deleteOneQuiz)
+
+// Création du endpoint /quizs pour la suppression de plusieurs quizzes
+app.delete('/quizzes', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuizController.deleteManyQuizzes)
 
 app.listen(Config.port, () => {
   Logger.info(`Serveur démarré sur le port ${Config.port}`)
