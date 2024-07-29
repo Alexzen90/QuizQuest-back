@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId
 
-
 const QuestionSchema = mongoose.Schema({
   categorie_id: {
     type: ObjectId,
