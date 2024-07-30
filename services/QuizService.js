@@ -32,8 +32,18 @@ module.exports.addOneQuiz = async function (quiz, options, callback) {
             callback(null, new_quiz.toObject());
         }
     } catch (error) {
-        console.log(error)
-        callback(error); // Autres erreurs
+        if (error.code === 11000) { // Erreur de duplicité
+            var field = Object.keys(error.keyValue)[0];
+            var err = {
+                msg: `Duplicate key error: ${field} must be unique.`,
+                fields_with_error: [field],
+                fields: { [field]: `The ${field} is already taken.` },
+                type_error: "duplicate"
+            };
+            callback(err);
+        } else {
+            callback(error); // Autres erreurs
+        }
     }
 };
 

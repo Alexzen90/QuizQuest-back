@@ -64,7 +64,7 @@ chai.use(chaiHttp)
 
 describe("POST - /quiz", () => {
     it("Ajouter un quiz. - S", (done) => {
-        chai.request(server).post('/quiz').auth(token, { type: 'bearer' }).send({
+        chai.request(server).post('/quiz').send({
           created_by: rdm_user(tab_id_users),
           name: "Quiz sur Naruto",
           categorie: "Manga/Anime",

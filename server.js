@@ -136,7 +136,7 @@ app.delete('/questions', DatabaseMiddleware.checkConnection, passport.authentica
 /*--------------------- Création des routes (Quiz - Quiz) ---------------------*/
 
 // Création du endpoint /quiz pour l'ajout d'un quiz
-app.post('/quiz', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuizController.addOneQuiz)
+app.post('/quiz', DatabaseMiddleware.checkConnection, QuizController.addOneQuiz)
 
 // Création du endpoint /quizs pour l'ajout de plusieurs quizzes
 app.post('/quizzes', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuizController.addManyQuizzes)

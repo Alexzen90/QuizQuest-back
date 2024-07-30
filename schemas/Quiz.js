@@ -30,7 +30,13 @@ const QuizSchema = mongoose.Schema({
     },
     incorrect_answers: {
       type: [String],
-      required: true
+      required: true,
+      validate: [
+        function(value) {
+          return Array.isArray(value) && value.length === 3;
+        },
+        'le champ doit contenir 3 éléments séparés par une virgule et un espace(exemple: chat, chien, souris).'
+      ]
     }
   },
   question2: {
@@ -48,7 +54,13 @@ const QuizSchema = mongoose.Schema({
     },
     incorrect_answers: {
       type: [String],
-      required: true
+      required: true,
+      validate: [
+        function(value) {
+          return Array.isArray(value) && value.length === 3;
+        },
+        'le champ doit contenir 3 éléments séparés par une virgule et un espace(exemple: chat, chien, souris).'
+      ]
     }
   },
   question3: {
@@ -66,7 +78,13 @@ const QuizSchema = mongoose.Schema({
     },
     incorrect_answers: {
       type: [String],
-      required: true
+      required: true,
+      validate: [
+        function(value) {
+          return Array.isArray(value) && value.length === 3;
+        },
+        'le champ doit contenir 3 éléments séparés par une virgule et un espace(exemple: chat, chien, souris).'
+      ]
     }
   },
   question4: {
@@ -84,7 +102,13 @@ const QuizSchema = mongoose.Schema({
     },
     incorrect_answers: {
       type: [String],
-      required: true
+      required: true,
+      validate: [
+        function(value) {
+          return Array.isArray(value) && value.length === 3;
+        },
+        'le champ doit contenir 3 éléments séparés par une virgule et un espace(exemple: chat, chien, souris).'
+      ]
     }
   },
   question5: {
@@ -102,7 +126,13 @@ const QuizSchema = mongoose.Schema({
     },
     incorrect_answers: {
       type: [String],
-      required: true
+      required: true,
+      validate: [
+        function(value) {
+          return Array.isArray(value) && value.length === 3;
+        },
+        'le champ doit contenir 3 éléments séparés par une virgule et un espace(exemple: chat, chien, souris).'
+      ]
     }
   },
   question6: {
@@ -120,7 +150,13 @@ const QuizSchema = mongoose.Schema({
     },
     incorrect_answers: {
       type: [String],
-      required: true
+      required: true,
+      validate: [
+        function(value) {
+          return Array.isArray(value) && value.length === 3;
+        },
+        'le champ doit contenir 3 éléments séparés par une virgule et un espace(exemple: chat, chien, souris).'
+      ]
     }
   },
   question7: {
@@ -138,7 +174,13 @@ const QuizSchema = mongoose.Schema({
     },
     incorrect_answers: {
       type: [String],
-      required: true
+      required: true,
+      validate: [
+        function(value) {
+          return Array.isArray(value) && value.length === 3;
+        },
+        'le champ doit contenir 3 éléments séparés par une virgule et un espace(exemple: chat, chien, souris).'
+      ]
     }
   },
   question8: {
@@ -156,7 +198,13 @@ const QuizSchema = mongoose.Schema({
     },
     incorrect_answers: {
       type: [String],
-      required: true
+      required: true,
+      validate: [
+        function(value) {
+          return Array.isArray(value) && value.length === 3;
+        },
+        'le champ doit contenir 3 éléments séparés par une virgule et un espace(exemple: chat, chien, souris).'
+      ]
     }
   },
   question9: {
@@ -174,7 +222,13 @@ const QuizSchema = mongoose.Schema({
     },
     incorrect_answers: {
       type: [String],
-      required: true
+      required: true,
+      validate: [
+        function(value) {
+          return Array.isArray(value) && value.length === 3;
+        },
+        'le champ doit contenir 3 éléments séparés par une virgule et un espace(exemple: chat, chien, souris).'
+      ]
     }
   },
   question10: {
@@ -192,7 +246,13 @@ const QuizSchema = mongoose.Schema({
     },
     incorrect_answers: {
       type: [String],
-      required: true
+      required: true,
+      validate: [
+        function(value) {
+          return Array.isArray(value) && value.length === 3;
+        },
+        'le champ doit contenir 3 éléments séparés par une virgule et un espace(exemple: chat, chien, souris).'
+      ]
     }
   },
   created_at: {
