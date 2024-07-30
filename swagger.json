@@ -1,0 +1,310 @@
+{
+  "swaggerDefinition": {
+    "openapi": "3.0.0",
+    "info": {
+      "title": "QuizQuest - back",
+      "version": "1.0.0",
+      "description": "API documentation"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:3001",
+        "description": "Development server"
+      }
+    ],
+    "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      },
+      "schemas": {
+        "User": {
+          "type": "object",
+          "required": [
+            "username",
+            "email",
+            "password"
+          ],
+          "properties": {
+            "username": {
+              "type": "string",
+              "description": "The user's username",
+              "example": "johndoe"
+            },
+            "email": {
+              "type": "string",
+              "description": "The user's email",
+              "example": "johndoe@example.com"
+            },
+            "password": {
+              "type": "string",
+              "description": "The user's password",
+              "example": "secret"
+            },
+            "token": {
+              "type": "string",
+              "description": "An optional token for the user",
+              "example": "somerandomtoken"
+            }
+          }
+        },
+        "Quiz": {
+          "type": "object",
+          "required": [
+            "name",
+            "categorie",
+            "question1",
+            "question2",
+            "question3",
+            "question4",
+            "question5",
+            "question6",
+            "question7",
+            "question8",
+            "question9",
+            "question10"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The quiz's name",
+              "example": "Quiz sur les vacances"
+            },
+            "categorie": {
+              "type": "string",
+              "description": "The quiz's theme",
+              "example": "Animaux"
+            },
+            "question1": {
+              "type": "object",
+              "description": "Question 1",
+              "example": {
+                "created_by": "johndoe",
+                "question": "De quelle couleur est le ciel ?",
+                "correct_answer": "Bleu",
+                "incorrect_answers": [
+                  "Rouge",
+                  "Vert",
+                  "Jaune"
+                ]
+              }
+            },"question2": {
+              "type": "object",
+              "description": "Question 2",
+              "example": {
+                "created_by": "johndoe",
+                "question": "De quelle couleur est le ciel ?",
+                "correct_answer": "Bleu",
+                "incorrect_answers": [
+                  "Rouge",
+                  "Vert",
+                  "Jaune"
+                ]
+              }
+            },"question3": {
+              "type": "object",
+              "description": "Question 3",
+              "example": {
+                "created_by": "johndoe",
+                "question": "De quelle couleur est le ciel ?",
+                "correct_answer": "Bleu",
+                "incorrect_answers": [
+                  "Rouge",
+                  "Vert",
+                  "Jaune"
+                ]
+              }
+            },"question4": {
+              "type": "object",
+              "description": "Question 4",
+              "example": {
+                "created_by": "johndoe",
+                "question": "De quelle couleur est le ciel ?",
+                "correct_answer": "Bleu",
+                "incorrect_answers": [
+                  "Rouge",
+                  "Vert",
+                  "Jaune"
+                ]
+              }
+            },"question5": {
+              "type": "object",
+              "description": "Question 5",
+              "example": {
+                "created_by": "johndoe",
+                "question": "De quelle couleur est le ciel ?",
+                "correct_answer": "Bleu",
+                "incorrect_answers": [
+                  "Rouge",
+                  "Vert",
+                  "Jaune"
+                ]
+              }
+            },"question6": {
+              "type": "object",
+              "description": "Question 6",
+              "example": {
+                "created_by": "johndoe",
+                "question": "De quelle couleur est le ciel ?",
+                "correct_answer": "Bleu",
+                "incorrect_answers": [
+                  "Rouge",
+                  "Vert",
+                  "Jaune"
+                ]
+              }
+            },"question7": {
+              "type": "object",
+              "description": "Question 7",
+              "example": {
+                "created_by": "johndoe",
+                "question": "De quelle couleur est le ciel ?",
+                "correct_answer": "Bleu",
+                "incorrect_answers": [
+                  "Rouge",
+                  "Vert",
+                  "Jaune"
+                ]
+              }
+            },"question8": {
+              "type": "object",
+              "description": "Question 8",
+              "example": {
+                "created_by": "johndoe",
+                "question": "De quelle couleur est le ciel ?",
+                "correct_answer": "Bleu",
+                "incorrect_answers": [
+                  "Rouge",
+                  "Vert",
+                  "Jaune"
+                ]
+              }
+            },"question9": {
+              "type": "object",
+              "description": "Question 9",
+              "example": {
+                "created_by": "johndoe",
+                "question": "De quelle couleur est le ciel ?",
+                "correct_answer": "Bleu",
+                "incorrect_answers": [
+                  "Rouge",
+                  "Vert",
+                  "Jaune"
+                ]
+              }
+            },"question10": {
+              "type": "object",
+              "description": "Question 10",
+              "example": {
+                "created_by": "johndoe",
+                "question": "De quelle couleur est le ciel ?",
+                "correct_answer": "Bleu",
+                "incorrect_answers": [
+                  "Rouge",
+                  "Vert",
+                  "Jaune"
+                ]
+              }
+            }
+          }
+        },
+        "Login": {
+          "type": "object",
+          "required": ["username", "password"],
+          "properties": {
+            "username": {
+              "type": "string",
+              "description": "The user's username",
+              "example": "johndoe"
+            },
+            "password": {
+              "type": "string",
+              "description": "The user's password",
+              "example": "secret"
+            }
+          }
+        }
+      },
+      "responses": {
+        "NotFound": {
+          "description": "Resource not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type_error": {
+                    "type": "string",
+                    "example": "no-found"
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Resource not found"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ValidationError": {
+          "description": "Validation error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type_error": {
+                    "type": "string",
+                    "example": "validator"
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Validation error"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "DuplicateError": {
+          "description": "Duplicate entry",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type_error": {
+                    "type": "string",
+                    "example": "duplicate"
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Duplicate entry"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "tags": [
+      {
+        "name": "User",
+        "description": "Operations about user"
+      },
+      {
+        "name": "Login",
+        "description": "Operations about authentification"
+      },
+      {
+        "name": "Quiz",
+        "description": "Operations about quiz creation"
+      }
+    ]
+  },
+  "apis": ["./controllers/*.js"]
+}

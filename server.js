@@ -3,6 +3,14 @@ const _ = require("lodash")
 const bodyParser = require('body-parser')
 const Config = require ('./config')
 const Logger = require('./utils/logger').pino
+const swaggerJsdoc = require('swagger-jsdoc')
+const swaggerUi = require('swagger-ui-express')
+
+// Configuration Swagger
+const swaggerOptions = require('./swagger.json');
+const swaggerDocs = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve,
+swaggerUi.setup(swaggerDocs));
 
 // Création de notre application express.js
 const app = express()

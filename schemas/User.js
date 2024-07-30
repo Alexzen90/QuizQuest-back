@@ -38,6 +38,9 @@ const userSchema = mongoose.Schema({
   status: {
     type: Boolean,
     default: false
+  },
+  token: {
+    type: String
   }
 })
 

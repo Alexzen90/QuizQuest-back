@@ -16,6 +16,7 @@ const QuizSchema = mongoose.Schema({
     required: true
   },
   question1: {
+    type: Object,
     difficulty: {
       type: String,
       required: true
@@ -40,6 +41,7 @@ const QuizSchema = mongoose.Schema({
     }
   },
   question2: {
+    type: Object,
     difficulty: {
       type: String,
       required: true
@@ -64,6 +66,7 @@ const QuizSchema = mongoose.Schema({
     }
   },
   question3: {
+    type: Object,
     difficulty: {
       type: String,
       required: true
@@ -88,6 +91,7 @@ const QuizSchema = mongoose.Schema({
     }
   },
   question4: {
+    type: Object,
     difficulty: {
       type: String,
       required: true
@@ -112,6 +116,7 @@ const QuizSchema = mongoose.Schema({
     }
   },
   question5: {
+    type: Object,
     difficulty: {
       type: String,
       required: true
@@ -136,6 +141,7 @@ const QuizSchema = mongoose.Schema({
     }
   },
   question6: {
+    type: Object,
     difficulty: {
       type: String,
       required: true
@@ -160,6 +166,7 @@ const QuizSchema = mongoose.Schema({
     }
   },
   question7: {
+    type: Object,
     difficulty: {
       type: String,
       required: true
@@ -184,6 +191,7 @@ const QuizSchema = mongoose.Schema({
     }
   },
   question8: {
+    type: Object,
     difficulty: {
       type: String,
       required: true
@@ -208,6 +216,7 @@ const QuizSchema = mongoose.Schema({
     }
   },
   question9: {
+    type: Object,
     difficulty: {
       type: String,
       required: true
@@ -232,6 +241,7 @@ const QuizSchema = mongoose.Schema({
     }
   },
   question10: {
+    type: Object,
     difficulty: {
       type: String,
       required: true
