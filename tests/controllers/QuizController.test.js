@@ -64,13 +64,13 @@ chai.use(chaiHttp)
 
 describe("POST - /quiz", () => {
     it("Ajouter un quiz. - S", (done) => {
-        chai.request(server).post('/quiz').send({
+        chai.request(server).post('/quiz').auth(token, { type: 'bearer' }).send({
           created_by: rdm_user(tab_id_users),
           name: "Quiz sur Naruto",
           categorie: "Manga/Anime",
           question1: {
             difficulty: "Facile",
-            question: "Qui est le créateur de la série Naruto ?",
+            question: "Qui est le créateur du manga Naruto ?",
             correct_answer: "Masashi Kishimoto",
             incorrect_answers: ["Akira Toriyama", "Eiichiro Oda", "Yoshihiro Togashi"]
           },
@@ -106,13 +106,13 @@ describe("POST - /quiz", () => {
           },
           question7: {
             difficulty: "Moyen",
-            question: "Qui a été le sensei d'Obito Uchiha ?",
+            question: "Qui était le sensei d'Obito Uchiha ?",
             correct_answer: "Minato Namikaze",
             incorrect_answers: ["Jiraiya", "Hiruzen Sarutobi", "Kakashi"]
           },
           question8: {
             difficulty: "Difficile",
-            question: "Quel est le nom de la technique secrète de Shikamaru Nara pour immobiliser ses ennemis ?",
+            question: "Quel est le nom de la technique secrète de Shikamaru pour immobiliser ses ennemis ?",
             correct_answer: "Kagemane no Jutsu",
             incorrect_answers: ["Kage Kubi Shibari no Jutsu", "Kuchiyose No Jutsu", "Kageyose no Jutsu"]
           },

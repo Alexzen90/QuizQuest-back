@@ -126,6 +126,7 @@ describe("addOneQuiz", () => {
             expect(value).to.be.a('object');
             expect(value).to.haveOwnProperty('_id')
             expect(value).to.haveOwnProperty('name')
+            expect(value).to.haveOwnProperty('created_by')
             id_quiz_valid = value._id
             quizzes.push(value)
             done()

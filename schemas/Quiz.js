@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId
 
 const QuizSchema = mongoose.Schema({
-  created_by: {
+  user_id: {
     type: ObjectId,
     ref: 'User'
   },

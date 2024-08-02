@@ -9,7 +9,7 @@ Quiz.createIndexes()
 
 module.exports.addOneQuiz = async function (quiz, options, callback) {
     try {
-        quiz.categorie_id = options && options.categorie ? options.categorie._id : quiz.categorie_id
+        quiz.user_id = options && options.user ? options.user._id : quiz.user_id
         var new_quiz = new Quiz(quiz);
         var errors = new_quiz.validateSync();
         if (errors) {

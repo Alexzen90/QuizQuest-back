@@ -1,7 +1,7 @@
 const CategorieService = require('../services/CategorieService')
 const LoggerHttp = require ('../utils/logger').http
 
-// La fonction permet d'ajouter un categorie
+// La fonction permet d'ajouter une categorie
 module.exports.addOneCategorie = function(req, res) {
     LoggerHttp(req, res)
     req.log.info("Création d'une categorie")
@@ -154,7 +154,7 @@ module.exports.findManyCategories = function(req, res) {
 // La fonction permet de modifier une categorie
 module.exports.updateOneCategorie = function(req, res) {
     LoggerHttp(req, res)
-    req.log.info("Modification d'un categorie")
+    req.log.info("Modification d'une categorie")
     let update = req.body
     let options = {user: req.user}
     CategorieService.updateOneCategorie(req.params.id, update, options, function(err, value) {

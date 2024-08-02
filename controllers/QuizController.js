@@ -1,10 +1,10 @@
 const QuizService = require('../services/QuizService')
 const LoggerHttp = require ('../utils/logger').http
 
-// La fonction permet d'ajouter une quiz
+// La fonction permet d'ajouter un quiz
 module.exports.addOneQuiz = function(req, res) {
     LoggerHttp(req, res)
-    req.log.info("Création d'une quiz")
+    req.log.info("Création d'un quiz")
     let options = {user: req.user}
 
     QuizService.addOneQuiz(req.body, options, function(err, value) {

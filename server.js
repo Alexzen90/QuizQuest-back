@@ -6,14 +6,14 @@ const Logger = require('./utils/logger').pino
 const swaggerJsdoc = require('swagger-jsdoc')
 const swaggerUi = require('swagger-ui-express')
 
+// Création de notre application express.js
+const app = express()
+
 // Configuration Swagger
 const swaggerOptions = require('./swagger.json');
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve,
 swaggerUi.setup(swaggerDocs));
-
-// Création de notre application express.js
-const app = express()
 
 // Démarrage de la database
 require('./utils/database')
@@ -144,7 +144,7 @@ app.delete('/questions', DatabaseMiddleware.checkConnection, passport.authentica
 /*--------------------- Création des routes (Quiz - Quiz) ---------------------*/
 
 // Création du endpoint /quiz pour l'ajout d'un quiz
-app.post('/quiz', DatabaseMiddleware.checkConnection, QuizController.addOneQuiz)
+app.post('/quiz', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuizController.addOneQuiz)
 
 // Création du endpoint /quizs pour l'ajout de plusieurs quizzes
 app.post('/quizzes', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuizController.addManyQuizzes)
