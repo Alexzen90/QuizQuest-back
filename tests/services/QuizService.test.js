@@ -740,6 +740,54 @@ describe("findManyQuizzesById", () => {
     })
 })
 
+describe("findOneQuiz", () => {
+  it("Chercher un quiz par les champs selectionnés. - S", (done) => {
+      QuizService.findOneQuiz(["name", "categorie"], quizzes[0].name, null, function (err, value) {
+          expect(value).to.haveOwnProperty('name')
+          done()
+      })
+  })
+  it("Chercher un quiz sans tableau de champ. - E", (done) => {
+      QuizService.findOneQuiz("name", quizzes[0].name, null, function (err, value) {
+          expect(err).to.haveOwnProperty('type_error')
+          done()
+      })
+  })
+  it("Chercher un quiz inexistant. - E", (done) => {
+      QuizService.findOneQuiz(["name"], "quizzes[0].name", null, function (err, value) {
+          expect(err).to.haveOwnProperty('type_error')
+          done()
+      })
+  })
+})
+
+describe("findManyQuizzes", () => {
+  it("Retourne 3 quizzes - S", (done) => {
+      QuizService.findManyQuizzes(null, 3, 1, null, function (err, value) {
+          expect(value).to.haveOwnProperty("count")
+          expect(value).to.haveOwnProperty("results")
+          expect(err).to.be.null
+          done()
+      })
+  })
+  it("Faire une recherche avec 0 résultats correspondant - S", (done) => {
+      QuizService.findManyQuizzes('couteau', 1, 3, null, function (err, value) {
+          expect(value).to.haveOwnProperty("count")
+          expect(value).to.haveOwnProperty("results")
+          expect(err).to.be.null
+          done()
+      })
+  })
+  it("Envoie d'une chaine de caractère a la place de la page - E", (done) => {
+      QuizService.findManyQuizzes(null, "coucou", 3, null, function (err, value) {
+          expect(err).to.haveOwnProperty("type_error")
+          expect(err["type_error"]).to.be.equal("no-valid")
+          expect(value).to.undefined
+          done()
+      })
+  })
+})
+
 describe("updateOneQuiz", () => {
     it("Modifier un quiz correct. - S", (done) => {
         QuizService.updateOneQuiz(id_quiz_valid, { categorie: "Animaux" }, null, function (err, value) {

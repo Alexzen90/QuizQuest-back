@@ -158,6 +158,10 @@ app.get('/quiz/:id', DatabaseMiddleware.checkConnection, passport.authenticate('
 // Création du endpoint /quizs pour la récupération de plusieurs quizzes via l'idS
 app.get('/quizzes', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuizController.findManyQuizzesById)
 
+app.get('/quiz', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuizController.findOneQuiz)
+
+app.get('/quizzes_by_filters', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuizController.findManyQuizzes)
+
 // Création du endpoint /quiz pour la modification d'un quiz
 app.put('/quiz/:id', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuizController.updateOneQuiz)
 

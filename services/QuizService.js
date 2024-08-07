@@ -154,6 +154,72 @@ module.exports.findManyQuizzesById = function (quizzes_id, options, callback) {
     }
 }
 
+module.exports.findOneQuiz = function (tab_field, value, options, callback) {
+    let opts = {populate: options && options.populate ? ['user_id'] : []}
+    var field_unique = ['name', "categorie"]
+
+    if (tab_field && Array.isArray(tab_field) && value && _.filter(tab_field, (e) => { return field_unique.indexOf(e) == -1}).length == 0) {
+        var obj_find = []
+        _.forEach(tab_field, (e) => {
+            obj_find.push({[e]: value})
+        })
+        Quiz.findOne({ $or: obj_find}, null, opts).then((value) => {
+            if (value){
+                callback(null, value.toObject())
+            }else {
+                callback({msg: "Quiz non trouvé.", type_error: "no-found"})
+            }
+        }).catch((err) => {
+            callback({msg: "Error interne mongo", type_error:'error-mongo'})
+        })
+    }
+    else {
+        let msg = ''
+        if(!tab_field || !Array.isArray(tab_field)) {
+            msg += "Les champs de recherche sont incorrecte."
+        }
+        if(!value){
+            msg += msg ? " Et la valeur de recherche est vide" : "La valeur de recherche est vide"
+        }
+        if(_.filter(tab_field, (e) => { return field_unique.indexOf(e) == -1}).length > 0) {
+            var field_not_authorized = _.filter(tab_field, (e) => { return field_unique.indexOf(e) == -1})
+            msg += msg ? ` Et (${field_not_authorized.join(',')}) ne sont pas des champs de recherche autorisé.` : 
+            `Les champs (${field_not_authorized.join(',')}) ne sont pas des champs de recherche autorisé.`
+            callback({ msg: msg, type_error: 'no-valid', field_not_authorized: field_not_authorized })
+        }
+        else{
+            callback({ msg: msg, type_error: 'no-valid'})
+        }
+    }
+}
+
+module.exports.findManyQuizzes = function(search, limit, page, options, callback) {
+    let populate = options && options.populate ? ['user_id'] : []
+    page = !page ? 1 : parseInt(page)
+    limit = !limit ? 10 : parseInt(limit)
+
+    if (typeof page !== "number" || typeof limit !== "number" || isNaN(page) || isNaN(limit)) {
+        callback ({msg: `format de ${typeof page !== "number" ? "page" : "limit"} est incorrect`, type_error: "no-valid"})
+    }else{
+        let query_mongo = search ? {$or: _.map(["name", "categorie"], (e) => {return {[e]: {$regex: search}}})} : {}
+        Quiz.countDocuments(query_mongo).then((value) => {
+            if (value > 0) {
+                const skip = ((page - 1) * limit)
+                Quiz.find(query_mongo, null, {skip:skip, limit:limit, populate: populate, lean: true}).then((results) => {
+                    callback(null, {
+                        count: value,
+                        results: results
+                    })
+                })
+            }else{
+                callback(null, {count: 0, results: []})
+            }
+        }).catch((e) => {
+            callback(e)
+        })
+    }
+}
+
 module.exports.updateOneQuiz = function (quiz_id, update, options, callback) {
     update.user_id = options && options.user ? options.user._id : update.user_id
     update.updated_at = new Date()

@@ -98,6 +98,58 @@ module.exports.findManyQuizzesById = function(req, res) {
     })
 }
 
+module.exports.findOneQuiz = function(req, res){
+    LoggerHttp(req, res)
+    req.log.info("Recherche d'un quiz par un champ autorisé")
+    let fields = req.query.fields
+    let opts = {populate: req.query.populate}
+    if (fields && !Array.isArray(fields))
+        fields = [fields]
+
+    QuizService.findOneQuiz(fields, req.query.value, opts, function(err, value) {        
+        if (err && err.type_error == "no-found") {
+            res.statusCode = 404
+            res.send(err)
+        }
+        else if (err && err.type_error == "no-valid") {
+            res.statusCode = 405
+            res.send(err)
+        }
+        else if (err && err.type_error == "error-mongo") {
+            res.statusCode = 500
+            res.send(err)
+        }
+        else {
+            res.statusCode = 200
+            res.send(value)
+        }
+    })
+}
+
+// La fonction permet de chercher plusieurs utilisateurs
+module.exports.findManyQuizzes = function(req, res) {
+    req.log.info("Recherche de plusieurs quizzes")
+    let page = req.query.page
+    let pageSize = req.query.pageSize
+    let searchValue = req.query.q
+    let opts = {populate: req.query.populate}
+
+    QuizService.findManyQuizzes(searchValue, pageSize, page,  opts, function(err, value) {        
+        if (err && err.type_error == "no-valid") {
+            res.statusCode = 405
+            res.send(err)
+        }
+        else if (err && err.type_error == "error-mongo") {
+            res.statusCode = 500
+            res.send(err)
+        }
+        else {
+            res.statusCode = 200
+            res.send(value)
+        }
+    })
+}
+
 // La fonction permet de modifier un quiz
 module.exports.updateOneQuiz = function(req, res) {
     LoggerHttp(req, res)
