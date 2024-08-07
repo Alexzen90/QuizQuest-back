@@ -153,7 +153,7 @@ describe("POST - /categories", () => {
 })
 
 describe("GET - /categorie/:id", () => {
-    it("Chercher un categorie correct. - S", (done) => {
+    it("Chercher une categorie correct. - S", (done) => {
         chai.request(server).get('/categorie/' + categories[0]._id)
         .auth(token, { type: 'bearer' })
         .end((err, res) => {

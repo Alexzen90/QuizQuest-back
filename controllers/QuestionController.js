@@ -5,7 +5,8 @@ const LoggerHttp = require ('../utils/logger').http
 module.exports.addOneQuestion = function(req, res) {
     LoggerHttp(req, res)
     req.log.info("Création d'une question")
-    let options = {user: req.user}
+    let options = {categorie: req.categorie}
+
 
     QuestionService.addOneQuestion(req.body, options, function(err, value) {
         if (err && err.type_error == "no found") {
@@ -31,7 +32,7 @@ module.exports.addOneQuestion = function(req, res) {
 module.exports.addManyQuestions = function(req, res) {
     LoggerHttp(req, res)
     req.log.info("Création de plusieurs questions")
-    let options = {user: req.user}
+    let options = {categorie: req.query.categorie}
     
     QuestionService.addManyQuestions(req.body, options, function(err, value) {
         if (err) {

@@ -4,13 +4,11 @@ const ObjectId = mongoose.Types.ObjectId
 const QuestionSchema = mongoose.Schema({
   categorie_id: {
     type: ObjectId,
-    ref: 'Categorie',
-    required: true
+    ref: 'Categorie'
   },
   question: {
     type: String,
-    required: true,
-    unique: true
+    required: true
   },
   difficulty: {
     type: String,

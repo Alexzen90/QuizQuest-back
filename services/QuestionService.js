@@ -42,7 +42,10 @@ module.exports.addManyQuestions = async function (questions, options, callback) 
     // Vérifier les erreurs de validation
     for (var i = 0; i < questions.length; i++) {
         var question = questions[i];
-        question.categorie_id = options && options.categorie ? options.categorie._id : question.categorie_id
+        question.categorie_id = options && options.categorie ? options.categorie : question.categorie_id
+        // console.log("LAAAAAAAAAAAAAAAAAAAAAAAA1", options);
+        // console.log("LAAAAAAAAAAAAAAAAAAAAAAAA2", options.categorie);
+        // console.log("LAAAAAAAAAAAAAAAAAAAAAAAAAAA3", question);
         var new_question = new Question(question);
         var error = new_question.validateSync();
         if (error) {
@@ -63,10 +66,11 @@ module.exports.addManyQuestions = async function (questions, options, callback) 
         }
     }
     if (errors.length > 0) {
+        console.log(errors)
         callback(errors);
     } else {
         try {
-            // Tenter d'insérer les utilisateurs
+            // Tenter d'insérer les questions
             const data = await Question.insertMany(questions, { ordered: false });
             callback(null, data);
         } catch (error) {

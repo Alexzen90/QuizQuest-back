@@ -56,6 +56,9 @@ app.use(bodyParser.json(), LoggerMiddleware.addLogger)
 // Création du endpoint /login pour connecter un utilisateur
 app.post('/login', DatabaseMiddleware.checkConnection, UserController.loginUser)
 
+// Création du endpoint /logout pour déconnecter un utilisateur
+app.post('/logout', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), UserController.logoutUser)
+
 // Création du endpoint /user pour l'ajout d'un utilisateur
 app.post('/user', DatabaseMiddleware.checkConnection, UserController.addOneUser)
 
