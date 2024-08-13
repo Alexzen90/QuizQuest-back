@@ -8,8 +8,9 @@ var Question = mongoose.model('Question', QuestionSchema)
 Question.createIndexes()
 
 module.exports.addOneQuestion = async function (question, options, callback) {
+    console.log(options, "OPTIONNNNSNSNSSNSN")
     try {
-        question.categorie_id = options && options.categorie ? options.categorie._id : question.categorie_id
+        console.log(options, question)
         var new_question = new Question(question);
         var errors = new_question.validateSync();
         if (errors) {
@@ -42,7 +43,9 @@ module.exports.addManyQuestions = async function (questions, options, callback) 
     // Vérifier les erreurs de validation
     for (var i = 0; i < questions.length; i++) {
         var question = questions[i];
-        question.categorie_id = options && options.categorie ? options.categorie : question.categorie_id
+        question.categorie_id = options && options.categorie ? options.categorie._id : question.categorie_id
+        question.user_id = options && options.user ? options.user._id : question.user_id
+        question.quiz_id = options && options.quiz ? options.quiz._id : question.quiz_id
         var new_question = new Question(question);
         var error = new_question.validateSync();
         if (error) {
@@ -92,7 +95,7 @@ module.exports.addManyQuestions = async function (questions, options, callback) 
 };
 
 module.exports.findOneQuestionById = function (question_id, options, callback) {
-    let opts = {populate: options && options.populate ? ["user_id"] : []}
+    let opts = {populate: options && options.populate ? ["user_id", "quiz_id", "categorie_id"] : []}
 
     if (question_id && mongoose.isValidObjectId(question_id)) {
         Question.findById(question_id, null, opts).then((value) => {
@@ -100,7 +103,7 @@ module.exports.findOneQuestionById = function (question_id, options, callback) {
                 if (value) {
                     callback(null, value.toObject());
                 } else {
-                    callback({ msg: "Aucun question trouvé.", type_error: "no-found" });
+                    callback({ msg: "Aucune question trouvé.", type_error: "no-found" });
                 }
             }
             catch (e) {
@@ -115,7 +118,7 @@ module.exports.findOneQuestionById = function (question_id, options, callback) {
 }
 
 module.exports.findManyQuestionsById = function (questions_id, options, callback) {
-    let opts = {populate: (options && options.populate ? ['user_id'] : []), lean: true}
+    let opts = {populate: (options && options.populate ? ['user_id', 'quiz_id', 'categorie_id'] : []), lean: true}
 
     if (questions_id && Array.isArray(questions_id) && questions_id.length > 0 && questions_id.filter((e) => { return mongoose.isValidObjectId(e) }).length == questions_id.length) {
         questions_id = questions_id.map((e) => { return new ObjectId(e) })
@@ -124,7 +127,7 @@ module.exports.findManyQuestionsById = function (questions_id, options, callback
                 if (value && Array.isArray(value) && value.length != 0) {
                     callback(null, value);
                 } else {
-                    callback({ msg: "Aucun question trouvé.", type_error: "no-found" });
+                    callback({ msg: "Aucune question trouvé.", type_error: "no-found" });
                 }
             }
             catch (e) {
@@ -142,6 +145,72 @@ module.exports.findManyQuestionsById = function (questions_id, options, callback
     }
     else {
         callback({ msg: "Tableau non conforme.", type_error: 'no-valid' });
+    }
+}
+
+module.exports.findOneQuestion = function (tab_field, value, options, callback) {
+    let opts = {populate: options && options.populate ? ['user_id', 'categorie_id', 'quiz_id'] : []}
+    var field_unique = ['question', 'quiz_id', 'categorie_id']
+
+    if (tab_field && Array.isArray(tab_field) && value && _.filter(tab_field, (e) => { return field_unique.indexOf(e) == -1}).length == 0) {
+        var obj_find = []
+        _.forEach(tab_field, (e) => {
+            obj_find.push({[e]: value})
+        })
+        Question.findOne({ $or: obj_find}, null, opts).then((value) => {
+            if (value){
+                callback(null, value.toObject())
+            }else {
+                callback({msg: "Question non trouvée.", type_error: "no-found"})
+            }
+        }).catch((err) => {
+            callback({msg: "Error interne mongo", type_error:'error-mongo'})
+        })
+    }
+    else {
+        let msg = ''
+        if(!tab_field || !Array.isArray(tab_field)) {
+            msg += "Les champs de recherche sont incorrecte."
+        }
+        if(!value){
+            msg += msg ? " Et la valeur de recherche est vide" : "La valeur de recherche est vide"
+        }
+        if(_.filter(tab_field, (e) => { return field_unique.indexOf(e) == -1}).length > 0) {
+            var field_not_authorized = _.filter(tab_field, (e) => { return field_unique.indexOf(e) == -1})
+            msg += msg ? ` Et (${field_not_authorized.join(',')}) ne sont pas des champs de recherche autorisé.` : 
+            `Les champs (${field_not_authorized.join(',')}) ne sont pas des champs de recherche autorisé.`
+            callback({ msg: msg, type_error: 'no-valid', field_not_authorized: field_not_authorized })
+        }
+        else{
+            callback({ msg: msg, type_error: 'no-valid'})
+        }
+    }
+}
+
+module.exports.findManyQuestions = function(search, limit, page, options, callback) {
+    let populate = options && options.populate ? ['user_id', 'quiz_id', 'categorie_id'] : []
+    page = !page ? 1 : parseInt(page)
+    limit = !limit ? 10 : parseInt(limit)
+
+    if (typeof page !== "number" || typeof limit !== "number" || isNaN(page) || isNaN(limit)) {
+        callback ({msg: `format de ${typeof page !== "number" ? "page" : "limit"} est incorrect`, type_error: "no-valid"})
+    }else{
+        let query_mongo = search ? {$or: _.map(["question"], (e) => {return {[e]: {$regex: search}}})} : {}
+        Question.countDocuments(query_mongo).then((value) => {
+            if (value > 0) {
+                const skip = ((page - 1) * limit)
+                Question.find(query_mongo, null, {skip:skip, limit:limit, populate: populate, lean: true}).then((results) => {
+                    callback(null, {
+                        count: value,
+                        results: results
+                    })
+                })
+            }else{
+                callback(null, {count: 0, results: []})
+            }
+        }).catch((e) => {
+            callback(e)
+        })
     }
 }
 

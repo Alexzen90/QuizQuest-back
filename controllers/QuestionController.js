@@ -5,7 +5,7 @@ const LoggerHttp = require ('../utils/logger').http
 module.exports.addOneQuestion = function(req, res) {
     LoggerHttp(req, res)
     req.log.info("Création d'une question")
-    let options = {categorie: req.categorie}
+    let options = {user: req.user, categorie: req.query.categorie_id, quiz: req.query.quiz_id}
 
 
     QuestionService.addOneQuestion(req.body, options, function(err, value) {
@@ -85,6 +85,58 @@ module.exports.findManyQuestionsById = function(req, res) {
             res.send(err)
         }
         else if (err && err.type_error == "no-valid") {
+            res.statusCode = 405
+            res.send(err)
+        }
+        else if (err && err.type_error == "error-mongo") {
+            res.statusCode = 500
+            res.send(err)
+        }
+        else {
+            res.statusCode = 200
+            res.send(value)
+        }
+    })
+}
+
+module.exports.findOneQuestion = function(req, res){
+    LoggerHttp(req, res)
+    req.log.info("Recherche d'une question par un champ autorisé")
+    let fields = req.query.fields
+    let opts = {populate: req.query.populate}
+    if (fields && !Array.isArray(fields))
+        fields = [fields]
+
+    QuestionService.findOneQuestion(fields, req.query.value, opts, function(err, value) {        
+        if (err && err.type_error == "no-found") {
+            res.statusCode = 404
+            res.send(err)
+        }
+        else if (err && err.type_error == "no-valid") {
+            res.statusCode = 405
+            res.send(err)
+        }
+        else if (err && err.type_error == "error-mongo") {
+            res.statusCode = 500
+            res.send(err)
+        }
+        else {
+            res.statusCode = 200
+            res.send(value)
+        }
+    })
+}
+
+// La fonction permet de chercher plusieurs questions
+module.exports.findManyQuestions = function(req, res) {
+    req.log.info("Recherche de plusieurs questions")
+    let page = req.query.page
+    let pageSize = req.query.pageSize
+    let searchValue = req.query.q
+    let opts = {populate: req.query.populate}
+
+    QuestionService.findManyQuestions(searchValue, pageSize, page,  opts, function(err, value) {        
+        if (err && err.type_error == "no-valid") {
             res.statusCode = 405
             res.send(err)
         }

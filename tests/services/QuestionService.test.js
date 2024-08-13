@@ -1,6 +1,7 @@
 const QuestionService = require('../../services/QuestionService')
 const UserService = require('../../services/UserService')
 const CategorieService = require('../../services/CategorieService')
+const QuizService = require('../../services/QuizService')
 const chai = require('chai');
 let expect = chai.expect;
 const _ = require('lodash')
@@ -8,6 +9,7 @@ var id_question_valid = ""
 var tab_id_questions = []
 var tab_id_users = []
 let tab_id_categories = []
+let tab_id_quizzes = []
 var questions = []
 
 let users = [
@@ -52,6 +54,21 @@ let categories = [
     },
 ];
 
+let quizzes = [
+    {
+        name: "Quiz 1",
+    },
+    {
+        name: "Quiz 2",
+    },
+    {
+        name: "Quiz 3",
+    },
+    {
+        name: "Quiz 4",
+    },
+]
+
 it("Création des utilisateurs fictif", (done) => {
     UserService.addManyUsers(users, null, function (err, value) {
         tab_id_users = _.map(value, '_id')
@@ -60,10 +77,25 @@ it("Création des utilisateurs fictif", (done) => {
 })
 
 it("Création des catégories fictives", (done) => {
+    categories = _.map(categories, (e) => {
+        e.user_id = rdm_user(tab_id_users)
+        return e
+    })
   CategorieService.addManyCategories(categories, null, function (err, value) {
       tab_id_categories = _.map(value, '_id')
       done()
   })
+})
+
+it("Création des quizzes fictifs", (done) => {
+    quizzes = _.map(quizzes, (e) => {
+        e.user_id = rdm_user(tab_id_users)
+        return e
+    })
+    QuizService.addManyQuizzes(quizzes, null, function (err, value) {
+        tab_id_quizzes = _.map(value, '_id')
+        done()
+    })
 })
 
 it("Authentification d'un utilisateur fictif.", (done) => {
@@ -73,7 +105,17 @@ it("Authentification d'un utilisateur fictif.", (done) => {
     })
 })
 
+function rdm_user (tab) {
+    let rdm_id = tab[Math.floor(Math.random() * (tab.length - 1))]
+    return rdm_id
+}
+
 function rdm_categorie (tab) {
+    let rdm_id = tab[Math.floor(Math.random() * (tab.length - 1))]
+    return rdm_id
+}
+
+function rdm_quiz (tab) {
     let rdm_id = tab[Math.floor(Math.random() * (tab.length - 1))]
     return rdm_id
 }
@@ -81,16 +123,24 @@ function rdm_categorie (tab) {
 describe("addOneQuestion", () => {
     it("Question correct. - S", (done) => {
         var question = {
+            user_id: rdm_user(tab_id_users),
             categorie_id: rdm_categorie(tab_id_categories),
+            quiz_id: rdm_quiz(tab_id_quizzes),
             question: "Quel animal est Sonic ?",
             difficulty: "Facile",
             correct_answer: "Un hérisson",
-            incorrect_answers: ["Un dragon", "Un lapin", "Un chien"]
+            incorrect_answers: ["Un dragon", "Un lapin", "Un chien"]            
         }
         QuestionService.addOneQuestion(question, null, function(err, value) {
             expect(value).to.be.a('object');
             expect(value).to.haveOwnProperty('_id')
+            expect(value).to.haveOwnProperty('user_id')
             expect(value).to.haveOwnProperty('categorie_id')
+            expect(value).to.haveOwnProperty('quiz_id')
+            expect(value).to.haveOwnProperty('question')
+            expect(value).to.haveOwnProperty('difficulty')
+            expect(value).to.haveOwnProperty('correct_answer')
+            expect(value).to.haveOwnProperty('incorrect_answers')
             id_question_valid = value._id
             questions.push(value)
             done()
@@ -98,14 +148,15 @@ describe("addOneQuestion", () => {
     })
     it("Question incorrect. (Sans question) - E", (done) => {
         var question_no_valid = {
+          user_id: rdm_user(tab_id_users),
           categorie_id: rdm_categorie(tab_id_categories),
+          quiz_id: rdm_quiz(tab_id_quizzes),
           difficulty: "Facile",
           correct_answer: "Un hérisson",
           incorrect_answers: ["Un dragon", "Un lapin", "Un chien"]
         }
         QuestionService.addOneQuestion(question_no_valid,  null, function (err, value) {
             expect(err).to.haveOwnProperty('msg')
-            // expect(err).to.haveOwnProperty('fields_with_error').with.lengthOf(1)
             expect(err).to.haveOwnProperty('fields')
             expect(err['fields']).to.haveOwnProperty('question')
             expect(err['fields']['question']).to.equal('Path `question` is required.')
@@ -114,7 +165,9 @@ describe("addOneQuestion", () => {
     })
     it("Question incorrect. (question vide) - E", (done) => {
         var question_no_valid = {
+          user_id: rdm_user(tab_id_users),
           categorie_id: rdm_categorie(tab_id_categories),
+          quiz_id: rdm_quiz(tab_id_quizzes),
           question: "",
           difficulty: "Facile",
           correct_answer: "Un hérisson",
@@ -134,20 +187,26 @@ describe("addOneQuestion", () => {
 describe("addManyQuestions", () => {
     it("Questions à ajouter, valide. - S", (done) => {
         var questions_tab = [{
+          user_id: rdm_user(tab_id_users),
           categorie_id: rdm_categorie(tab_id_categories),
+          quiz_id: rdm_quiz(tab_id_quizzes),
           question: "Qui est le réalisateur du film d'animation 'Your Name' ?",
           difficulty: "Moyen",
           correct_answer: "Makoto Shinkai",
           incorrect_answers: ["Hayao Miyazaki", "Mamoru Hosoda", "Satoshi Kon"]
         }, {
+          user_id: rdm_user(tab_id_users),
           categorie_id: rdm_categorie(tab_id_categories),
+          quiz_id: rdm_quiz(tab_id_quizzes),
           question: "Dans l'Attaque des Titans quel est le nom du district où vivaient Eren, Mikasa et Armin avant l'attaque du Titan Colossal ?",
           difficulty: "Difficile",
           correct_answer: "District de Shinganshina",
           incorrect_answers: ["District de Trost", "District de Karanes", "District de Stohess"]
         },
         {
+          user_id: rdm_user(tab_id_users),
           categorie_id: rdm_categorie(tab_id_categories),
+          quiz_id: rdm_quiz(tab_id_quizzes),
           question: "Dans One Piece, quel est le nom du fruit du démon que mange le personnage principal Luffy ?",
           difficulty: "Facile",
           correct_answer: "Gomu Gomu no Mi",
@@ -163,20 +222,26 @@ describe("addManyQuestions", () => {
     })
     it("Questions à ajouter, non valide. (Question vide) - E", (done) => {
         var questions_tab_error = [{
+          user_id: rdm_user(tab_id_users),
           categorie_id: rdm_categorie(tab_id_categories),
+          quiz_id: rdm_quiz(tab_id_quizzes),
           question: "",
           difficulty: "Facile",
           correct_answer: "Gomu Gomu no Mi",
           incorrect_answers: ["Mera Mera no Mi", "Bara Bara no Mi", "Gura Gura no Mi"]
         }, {
+          user_id: rdm_user(tab_id_users),
           categorie_id: rdm_categorie(tab_id_categories),
+          quiz_id: rdm_quiz(tab_id_quizzes),
           question: "ahahaha",
           difficulty: "Facile",
           correct_answer: "Gomu Gomu no Mi",
           incorrect_answers: ["Mera Mera no Mi", "Bara Bara no Mi", "Gura Gura no Mi"]
         },
         {
+          user_id: rdm_user(tab_id_users),
           categorie_id: rdm_categorie(tab_id_categories),
+          quiz_id: rdm_quiz(tab_id_quizzes),
           question: "salut",
           difficulty: "Facile",
           correct_answer: "Gomu Gomu no Mi",
@@ -242,14 +307,68 @@ describe("findManyQuestionsById", () => {
     })
 })
 
+describe("findOneQuestion", () => {
+    it("Chercher une question par les champs selectionnés. - S", (done) => {
+        QuestionService.findOneQuestion(["question"], questions[0].question, null, function (err, value) {
+            expect(value).to.haveOwnProperty('question')
+            done()
+        })
+    })
+    it("Chercher une question par les champs selectionnés (quiz_id). - S", (done) => {
+        QuestionService.findOneQuestion(["quiz_id"], questions[0].quiz_id, null, function (err, value) {
+            console.log(value)
+            expect(value).to.haveOwnProperty('quiz_id')
+            done()
+        })
+    })
+    it("Chercher une question sans tableau de champ. - E", (done) => {
+        QuestionService.findOneQuestion("question", questions[0].question, null, function (err, value) {
+            expect(err).to.haveOwnProperty('type_error')
+            done()
+        })
+    })
+    it("Chercher une question inexistante - E", (done) => {
+        QuestionService.findOneQuestion(["question"], "questions[0].question", null, function (err, value) {
+            expect(err).to.haveOwnProperty('type_error')
+            done()
+        })
+    })
+  })
+  
+  describe("findManyQuestions", () => {
+    it("Retourne 3 questions - S", (done) => {
+        QuestionService.findManyQuestions(null, 3, 1, null, function (err, value) {
+            expect(value).to.haveOwnProperty("count")
+            expect(value).to.haveOwnProperty("results")
+            expect(err).to.be.null
+            done()
+        })
+    })
+    it("Faire une recherche avec 0 résultats correspondant - S", (done) => {
+        QuestionService.findManyQuestions('couteau', 1, 3, null, function (err, value) {
+            expect(value).to.haveOwnProperty("count")
+            expect(value).to.haveOwnProperty("results")
+            expect(err).to.be.null
+            done()
+        })
+    })
+    it("Envoie d'une chaine de caractère a la place de la page - E", (done) => {
+        QuestionService.findManyQuestions(null, "coucou", 3, null, function (err, value) {
+            expect(err).to.haveOwnProperty("type_error")
+            expect(err["type_error"]).to.be.equal("no-valid")
+            expect(value).to.undefined
+            done()
+        })
+    })
+  })
+
 describe("updateOneQuestion", () => {
     it("Modifier une question correct. - S", (done) => {
-        QuestionService.updateOneQuestion(id_question_valid, { correct_answer: "Une vache" }, null, function (err, value) {
+        QuestionService.updateOneQuestion(id_question_valid, { question: "Une vache" }, null, function (err, value) {
             expect(value).to.be.a('object')
             expect(value).to.haveOwnProperty('_id')
-            expect(value).to.haveOwnProperty('correct_answer')
             expect(value).to.haveOwnProperty('updated_at')
-            expect(value['correct_answer']).to.be.equal('Une vache')
+            expect(value['question']).to.be.equal('Une vache')
             done()
 
         })
@@ -361,6 +480,12 @@ describe("deleteManyQuestions", () => {
 
 it("Suppression des catégories fictives", (done) => {
     CategorieService.deleteManyCategories(tab_id_categories, null, function (err, value) {
+        done()
+    })
+})
+
+it("Suppression des quizzes fictifs", (done) => {
+    QuizService.deleteManyQuizzes(tab_id_quizzes, null, function (err, value) {
         done()
     })
 })

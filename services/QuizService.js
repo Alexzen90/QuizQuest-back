@@ -52,7 +52,7 @@ module.exports.addManyQuizzes = async function (quizzes, options, callback) {
     // Vérifier les erreurs de validation
     for (var i = 0; i < quizzes.length; i++) {
         var quiz = quizzes[i];
-        quiz.categorie_id = options && options.categorie ? options.categorie._id : quiz.categorie_id
+        quiz.user_id = options && options.user ? options.user._id : quiz.user_id
         var new_quiz = new Quiz(quiz);
         var error = new_quiz.validateSync();
         if (error) {
@@ -155,8 +155,8 @@ module.exports.findManyQuizzesById = function (quizzes_id, options, callback) {
 }
 
 module.exports.findOneQuiz = function (tab_field, value, options, callback) {
-    let opts = {populate: options && options.populate ? ['user_id'] : []}
-    var field_unique = ['name', "categorie"]
+    let opts = {populate: options && options.populate ? ['user_id', 'categorie_id'] : []}
+    var field_unique = ['name']
 
     if (tab_field && Array.isArray(tab_field) && value && _.filter(tab_field, (e) => { return field_unique.indexOf(e) == -1}).length == 0) {
         var obj_find = []
@@ -201,7 +201,7 @@ module.exports.findManyQuizzes = function(search, limit, page, options, callback
     if (typeof page !== "number" || typeof limit !== "number" || isNaN(page) || isNaN(limit)) {
         callback ({msg: `format de ${typeof page !== "number" ? "page" : "limit"} est incorrect`, type_error: "no-valid"})
     }else{
-        let query_mongo = search ? {$or: _.map(["name", "categorie"], (e) => {return {[e]: {$regex: search}}})} : {}
+        let query_mongo = search ? {$or: _.map(["name"], (e) => {return {[e]: {$regex: search}}})} : {}
         Quiz.countDocuments(query_mongo).then((value) => {
             if (value > 0) {
                 const skip = ((page - 1) * limit)

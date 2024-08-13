@@ -5,7 +5,8 @@ const ObjectId = mongoose.Types.ObjectId
 const CategorieSchema = mongoose.Schema({
   user_id: {
     type: ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: true
   },
   name: {
     type: String,

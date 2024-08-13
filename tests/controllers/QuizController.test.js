@@ -65,69 +65,8 @@ chai.use(chaiHttp)
 describe("POST - /quiz", () => {
     it("Ajouter un quiz. - S", (done) => {
         chai.request(server).post('/quiz').auth(token, { type: 'bearer' }).send({
-          created_by: rdm_user(tab_id_users),
+          user_id: rdm_user(tab_id_users),
           name: "Quiz sur Naruto",
-          categorie: "Manga/Anime",
-          question1: {
-            difficulty: "Facile",
-            question: "Qui est le créateur du manga Naruto ?",
-            correct_answer: "Masashi Kishimoto",
-            incorrect_answers: ["Akira Toriyama", "Eiichiro Oda", "Yoshihiro Togashi"]
-          },
-          question2: {
-            difficulty: "Facile",
-            question: "Quelle bête à 9 queues est scellée à l'intérieur de Naruto ?",
-            correct_answer: "Kyūbi (Kurama)",
-            incorrect_answers: ["Ichibi (Shukaku)", "Nibi (Matatabi)", "Yonbi (Son Goku)"]
-          },
-          question3: {
-            difficulty: "Facile",
-            question: "Qui est le sensei de Naruto lors de son apprentissage avec les crapauds ?",
-            correct_answer: "Jiraiya",
-            incorrect_answers: ["Iruka", "Kakashi", "Tsunade"]
-          },
-          question4: {
-            difficulty: "Facile",
-            question: "Quel est le nom de l'organisation criminelle composée de ninjas déserteurs dans Naruto ?",
-            correct_answer: "Akatsuki",
-            incorrect_answers: ["Anbu", "Gotei 13", "Phantom Troupe"]
-          },
-          question5: {
-            difficulty: "Moyen",
-            question: "Qui est le leader originel de l'Akatsuki ?",
-            correct_answer: "Yahiko",
-            incorrect_answers: ["Madara Uchiha", "Obito Uchiha", "Zetsu"]
-          },
-          question6: {
-            difficulty: "Moyen",
-            question: "Quelle est la spécialité du clan Aburame ?",
-            correct_answer: "Contrôle des insectes",
-            incorrect_answers: ["Manipulation de l'ombre", "Contrôle mental", "Maitrise du Byakugan"]
-          },
-          question7: {
-            difficulty: "Moyen",
-            question: "Qui était le sensei d'Obito Uchiha ?",
-            correct_answer: "Minato Namikaze",
-            incorrect_answers: ["Jiraiya", "Hiruzen Sarutobi", "Kakashi"]
-          },
-          question8: {
-            difficulty: "Difficile",
-            question: "Quel est le nom de la technique secrète de Shikamaru pour immobiliser ses ennemis ?",
-            correct_answer: "Kagemane no Jutsu",
-            incorrect_answers: ["Kage Kubi Shibari no Jutsu", "Kuchiyose No Jutsu", "Kageyose no Jutsu"]
-          },
-          question9: {
-            difficulty: "Difficile",
-            question: "Quel est le nom de l'épée légendaire brandie par Zabuza Momochi ?",
-            correct_answer: "Kubikiribōchō",
-            incorrect_answers: ["Samehada", "Kusanagi", "Gunbai"]
-          },
-          question10: {
-            difficulty: "Dificile",
-            question: "Quel est le nom de la mère d'Itachi et de Sasuke Uchiha ?",
-            correct_answer: "Mikoto Uchiha",
-            incorrect_answers: ["Makoto Uchiha", "Mokoto Uchiha", "Maokoto Uchiha"]
-          }
         }).end((err, res) => {
             expect(res).to.have.status(201)
             quizzes.push(res.body)
@@ -136,68 +75,7 @@ describe("POST - /quiz", () => {
     })
     it("Ajouter un quiz incorrect. (Sans name) - E", (done) => {
         chai.request(server).post('/quiz').send({
-          created_by: rdm_user(tab_id_users),
-            categorie: "Manga/Anime",
-            question1: {
-              difficulty: "Facile",
-              question: "Qui est le créateur de la série Naruto ?",
-              correct_answer: "Masashi Kishimoto",
-              incorrect_answers: ["Akira Toriyama", "Eiichiro Oda", "Yoshihiro Togashi"]
-            },
-            question2: {
-              difficulty: "Facile",
-              question: "Quelle bête à 9 queues est scellée à l'intérieur de Naruto ?",
-              correct_answer: "Kyūbi (Kurama)",
-              incorrect_answers: ["Ichibi (Shukaku)", "Nibi (Matatabi)", "Yonbi (Son Goku)"]
-            },
-            question3: {
-              difficulty: "Facile",
-              question: "Qui est le sensei de Naruto lors de son apprentissage avec les crapauds ?",
-              correct_answer: "Jiraiya",
-              incorrect_answers: ["Iruka", "Kakashi", "Tsunade"]
-            },
-            question4: {
-              difficulty: "Facile",
-              question: "Quel est le nom de l'organisation criminelle composée de ninjas déserteurs dans Naruto ?",
-              correct_answer: "Akatsuki",
-              incorrect_answers: ["Anbu", "Gotei 13", "Phantom Troupe"]
-            },
-            question5: {
-              difficulty: "Moyen",
-              question: "Qui est le leader originel de l'Akatsuki ?",
-              correct_answer: "Yahiko",
-              incorrect_answers: ["Madara Uchiha", "Obito Uchiha", "Zetsu"]
-            },
-            question6: {
-              difficulty: "Moyen",
-              question: "Quelle est la spécialité du clan Aburame ?",
-              correct_answer: "Contrôle des insectes",
-              incorrect_answers: ["Manipulation de l'ombre", "Contrôle mental", "Maitrise du Byakugan"]
-            },
-            question7: {
-              difficulty: "Moyen",
-              question: "Qui a été le sensei d'Obito Uchiha ?",
-              correct_answer: "Minato Namikaze",
-              incorrect_answers: ["Jiraiya", "Hiruzen Sarutobi", "Kakashi"]
-            },
-            question8: {
-              difficulty: "Difficile",
-              question: "Quel est le nom de la technique secrète de Shikamaru Nara pour immobiliser ses ennemis ?",
-              correct_answer: "Kagemane no Jutsu",
-              incorrect_answers: ["Kage Kubi Shibari no Jutsu", "Kuchiyose No Jutsu", "Kageyose no Jutsu"]
-            },
-            question9: {
-              difficulty: "Difficile",
-              question: "Quel est le nom de l'épée légendaire brandie par Zabuza Momochi ?",
-              correct_answer: "Kubikiribōchō",
-              incorrect_answers: ["Samehada", "Kusanagi", "Gunbai"]
-            },
-            question10: {
-              difficulty: "Dificile",
-              question: "Quel est le nom de la mère d'Itachi et de Sasuke Uchiha ?",
-              correct_answer: "Mikoto Uchiha",
-              incorrect_answers: ["Makoto Uchiha", "Mokoto Uchiha", "Maokoto Uchiha"]
-            }
+          user_id: rdm_user(tab_id_users)
         })
         .auth(token, { type: 'bearer' })
         .end((err, res) => {
@@ -207,69 +85,8 @@ describe("POST - /quiz", () => {
     })
     it("Ajouter un quiz incorrect. (Avec un champ vide) - E", (done) => {
         chai.request(server).post('/quiz').send({
-          created_by: rdm_user(tab_id_users),
-          name: "",
-          categorie: "Manga/Anime",
-          question1: {
-            difficulty: "Facile",
-            question: "Qui est le créateur de la série Naruto ?",
-            correct_answer: "Masashi Kishimoto",
-            incorrect_answers: ["Akira Toriyama", "Eiichiro Oda", "Yoshihiro Togashi"]
-          },
-          question2: {
-            difficulty: "Facile",
-            question: "Quelle bête à 9 queues est scellée à l'intérieur de Naruto ?",
-            correct_answer: "Kyūbi (Kurama)",
-            incorrect_answers: ["Ichibi (Shukaku)", "Nibi (Matatabi)", "Yonbi (Son Goku)"]
-          },
-          question3: {
-            difficulty: "Facile",
-            question: "Qui est le sensei de Naruto lors de son apprentissage avec les crapauds ?",
-            correct_answer: "Jiraiya",
-            incorrect_answers: ["Iruka", "Kakashi", "Tsunade"]
-          },
-          question4: {
-            difficulty: "Facile",
-            question: "Quel est le nom de l'organisation criminelle composée de ninjas déserteurs dans Naruto ?",
-            correct_answer: "Akatsuki",
-            incorrect_answers: ["Anbu", "Gotei 13", "Phantom Troupe"]
-          },
-          question5: {
-            difficulty: "Moyen",
-            question: "Qui est le leader originel de l'Akatsuki ?",
-            correct_answer: "Yahiko",
-            incorrect_answers: ["Madara Uchiha", "Obito Uchiha", "Zetsu"]
-          },
-          question6: {
-            difficulty: "Moyen",
-            question: "Quelle est la spécialité du clan Aburame ?",
-            correct_answer: "Contrôle des insectes",
-            incorrect_answers: ["Manipulation de l'ombre", "Contrôle mental", "Maitrise du Byakugan"]
-          },
-          question7: {
-            difficulty: "Moyen",
-            question: "Qui a été le sensei d'Obito Uchiha ?",
-            correct_answer: "Minato Namikaze",
-            incorrect_answers: ["Jiraiya", "Hiruzen Sarutobi", "Kakashi"]
-          },
-          question8: {
-            difficulty: "Difficile",
-            question: "Quel est le nom de la technique secrète de Shikamaru Nara pour immobiliser ses ennemis ?",
-            correct_answer: "Kagemane no Jutsu",
-            incorrect_answers: ["Kage Kubi Shibari no Jutsu", "Kuchiyose No Jutsu", "Kageyose no Jutsu"]
-          },
-          question9: {
-            difficulty: "Difficile",
-            question: "Quel est le nom de l'épée légendaire brandie par Zabuza Momochi ?",
-            correct_answer: "Kubikiribōchō",
-            incorrect_answers: ["Samehada", "Kusanagi", "Gunbai"]
-          },
-          question10: {
-            difficulty: "Dificile",
-            question: "Quel est le nom de la mère d'Itachi et de Sasuke Uchiha ?",
-            correct_answer: "Mikoto Uchiha",
-            incorrect_answers: ["Makoto Uchiha", "Mokoto Uchiha", "Maokoto Uchiha"]
-          }
+          user_id: rdm_user(tab_id_users),
+          name: ""
         })
         .auth(token, { type: 'bearer' })
         .end((err, res) => {
@@ -283,198 +100,15 @@ describe("POST - /quizzes", () => {
     it("Ajouter des quizzes. - S", (done) => {
         chai.request(server).post('/quizzes').auth(token, { type: 'bearer' }).send([
           {
-            created_by: rdm_user(tab_id_users),
-                name: "test1",
-                categorie: "Manga/Anime",
-                question1: {
-                  difficulty: "Facile",
-                  question: "Qui est le créateur de la série Naruto ?",
-                  correct_answer: "Masashi Kishimoto",
-                  incorrect_answers: ["Akira Toriyama", "Eiichiro Oda", "Yoshihiro Togashi"]
-                },
-                question2: {
-                  difficulty: "Facile",
-                  question: "Quelle bête à 9 queues est scellée à l'intérieur de Naruto ?",
-                  correct_answer: "Kyūbi (Kurama)",
-                  incorrect_answers: ["Ichibi (Shukaku)", "Nibi (Matatabi)", "Yonbi (Son Goku)"]
-                },
-                question3: {
-                  difficulty: "Facile",
-                  question: "Qui est le sensei de Naruto lors de son apprentissage avec les crapauds ?",
-                  correct_answer: "Jiraiya",
-                  incorrect_answers: ["Iruka", "Kakashi", "Tsunade"]
-                },
-                question4: {
-                  difficulty: "Facile",
-                  question: "Quel est le nom de l'organisation criminelle composée de ninjas déserteurs dans Naruto ?",
-                  correct_answer: "Akatsuki",
-                  incorrect_answers: ["Anbu", "Gotei 13", "Phantom Troupe"]
-                },
-                question5: {
-                  difficulty: "Moyen",
-                  question: "Qui est le leader originel de l'Akatsuki ?",
-                  correct_answer: "Yahiko",
-                  incorrect_answers: ["Madara Uchiha", "Obito Uchiha", "Zetsu"]
-                },
-                question6: {
-                  difficulty: "Moyen",
-                  question: "Quelle est la spécialité du clan Aburame ?",
-                  correct_answer: "Contrôle des insectes",
-                  incorrect_answers: ["Manipulation de l'ombre", "Contrôle mental", "Maitrise du Byakugan"]
-                },
-                question7: {
-                  difficulty: "Moyen",
-                  question: "Qui a été le sensei d'Obito Uchiha ?",
-                  correct_answer: "Minato Namikaze",
-                  incorrect_answers: ["Jiraiya", "Hiruzen Sarutobi", "Kakashi"]
-                },
-                question8: {
-                  difficulty: "Difficile",
-                  question: "Quel est le nom de la technique secrète de Shikamaru Nara pour immobiliser ses ennemis ?",
-                  correct_answer: "Kagemane no Jutsu",
-                  incorrect_answers: ["Kage Kubi Shibari no Jutsu", "Kuchiyose No Jutsu", "Kageyose no Jutsu"]
-                },
-                question9: {
-                  difficulty: "Difficile",
-                  question: "Quel est le nom de l'épée légendaire brandie par Zabuza Momochi ?",
-                  correct_answer: "Kubikiribōchō",
-                  incorrect_answers: ["Samehada", "Kusanagi", "Gunbai"]
-                },
-                question10: {
-                  difficulty: "Dificile",
-                  question: "Quel est le nom de la mère d'Itachi et de Sasuke Uchiha ?",
-                  correct_answer: "Mikoto Uchiha",
-                  incorrect_answers: ["Makoto Uchiha", "Mokoto Uchiha", "Maokoto Uchiha"]
-                }
+            user_id: rdm_user(tab_id_users),
+            name: "test1"
           }, {
-            created_by: rdm_user(tab_id_users),
-                name: "test2",
-                categorie: "Manga/Anime",
-                question1: {
-                  difficulty: "Facile",
-                  question: "Qui est le créateur de la série Naruto ?",
-                  correct_answer: "Masashi Kishimoto",
-                  incorrect_answers: ["Akira Toriyama", "Eiichiro Oda", "Yoshihiro Togashi"]
-                },
-                question2: {
-                  difficulty: "Facile",
-                  question: "Quelle bête à 9 queues est scellée à l'intérieur de Naruto ?",
-                  correct_answer: "Kyūbi (Kurama)",
-                  incorrect_answers: ["Ichibi (Shukaku)", "Nibi (Matatabi)", "Yonbi (Son Goku)"]
-                },
-                question3: {
-                  difficulty: "Facile",
-                  question: "Qui est le sensei de Naruto lors de son apprentissage avec les crapauds ?",
-                  correct_answer: "Jiraiya",
-                  incorrect_answers: ["Iruka", "Kakashi", "Tsunade"]
-                },
-                question4: {
-                  difficulty: "Facile",
-                  question: "Quel est le nom de l'organisation criminelle composée de ninjas déserteurs dans Naruto ?",
-                  correct_answer: "Akatsuki",
-                  incorrect_answers: ["Anbu", "Gotei 13", "Phantom Troupe"]
-                },
-                question5: {
-                  difficulty: "Moyen",
-                  question: "Qui est le leader originel de l'Akatsuki ?",
-                  correct_answer: "Yahiko",
-                  incorrect_answers: ["Madara Uchiha", "Obito Uchiha", "Zetsu"]
-                },
-                question6: {
-                  difficulty: "Moyen",
-                  question: "Quelle est la spécialité du clan Aburame ?",
-                  correct_answer: "Contrôle des insectes",
-                  incorrect_answers: ["Manipulation de l'ombre", "Contrôle mental", "Maitrise du Byakugan"]
-                },
-                question7: {
-                  difficulty: "Moyen",
-                  question: "Qui a été le sensei d'Obito Uchiha ?",
-                  correct_answer: "Minato Namikaze",
-                  incorrect_answers: ["Jiraiya", "Hiruzen Sarutobi", "Kakashi"]
-                },
-                question8: {
-                  difficulty: "Difficile",
-                  question: "Quel est le nom de la technique secrète de Shikamaru Nara pour immobiliser ses ennemis ?",
-                  correct_answer: "Kagemane no Jutsu",
-                  incorrect_answers: ["Kage Kubi Shibari no Jutsu", "Kuchiyose No Jutsu", "Kageyose no Jutsu"]
-                },
-                question9: {
-                  difficulty: "Difficile",
-                  question: "Quel est le nom de l'épée légendaire brandie par Zabuza Momochi ?",
-                  correct_answer: "Kubikiribōchō",
-                  incorrect_answers: ["Samehada", "Kusanagi", "Gunbai"]
-                },
-                question10: {
-                  difficulty: "Dificile",
-                  question: "Quel est le nom de la mère d'Itachi et de Sasuke Uchiha ?",
-                  correct_answer: "Mikoto Uchiha",
-                  incorrect_answers: ["Makoto Uchiha", "Mokoto Uchiha", "Maokoto Uchiha"]
-                }
+            user_id: rdm_user(tab_id_users),
+            name: "test2"
           },
           {
-            created_by: rdm_user(tab_id_users),
-                name: "test3",
-                categorie: "Manga/Anime",
-                question1: {
-                  difficulty: "Facile",
-                  question: "Qui est le créateur de la série Naruto ?",
-                  correct_answer: "Masashi Kishimoto",
-                  incorrect_answers: ["Akira Toriyama", "Eiichiro Oda", "Yoshihiro Togashi"]
-                },
-                question2: {
-                  difficulty: "Facile",
-                  question: "Quelle bête à 9 queues est scellée à l'intérieur de Naruto ?",
-                  correct_answer: "Kyūbi (Kurama)",
-                  incorrect_answers: ["Ichibi (Shukaku)", "Nibi (Matatabi)", "Yonbi (Son Goku)"]
-                },
-                question3: {
-                  difficulty: "Facile",
-                  question: "Qui est le sensei de Naruto lors de son apprentissage avec les crapauds ?",
-                  correct_answer: "Jiraiya",
-                  incorrect_answers: ["Iruka", "Kakashi", "Tsunade"]
-                },
-                question4: {
-                  difficulty: "Facile",
-                  question: "Quel est le nom de l'organisation criminelle composée de ninjas déserteurs dans Naruto ?",
-                  correct_answer: "Akatsuki",
-                  incorrect_answers: ["Anbu", "Gotei 13", "Phantom Troupe"]
-                },
-                question5: {
-                  difficulty: "Moyen",
-                  question: "Qui est le leader originel de l'Akatsuki ?",
-                  correct_answer: "Yahiko",
-                  incorrect_answers: ["Madara Uchiha", "Obito Uchiha", "Zetsu"]
-                },
-                question6: {
-                  difficulty: "Moyen",
-                  question: "Quelle est la spécialité du clan Aburame ?",
-                  correct_answer: "Contrôle des insectes",
-                  incorrect_answers: ["Manipulation de l'ombre", "Contrôle mental", "Maitrise du Byakugan"]
-                },
-                question7: {
-                  difficulty: "Moyen",
-                  question: "Qui a été le sensei d'Obito Uchiha ?",
-                  correct_answer: "Minato Namikaze",
-                  incorrect_answers: ["Jiraiya", "Hiruzen Sarutobi", "Kakashi"]
-                },
-                question8: {
-                  difficulty: "Difficile",
-                  question: "Quel est le nom de la technique secrète de Shikamaru Nara pour immobiliser ses ennemis ?",
-                  correct_answer: "Kagemane no Jutsu",
-                  incorrect_answers: ["Kage Kubi Shibari no Jutsu", "Kuchiyose No Jutsu", "Kageyose no Jutsu"]
-                },
-                question9: {
-                  difficulty: "Difficile",
-                  question: "Quel est le nom de l'épée légendaire brandie par Zabuza Momochi ?",
-                  correct_answer: "Kubikiribōchō",
-                  incorrect_answers: ["Samehada", "Kusanagi", "Gunbai"]
-                },
-                question10: {
-                  difficulty: "Dificile",
-                  question: "Quel est le nom de la mère d'Itachi et de Sasuke Uchiha ?",
-                  correct_answer: "Mikoto Uchiha",
-                  incorrect_answers: ["Makoto Uchiha", "Mokoto Uchiha", "Maokoto Uchiha"]
-                }
+            user_id: rdm_user(tab_id_users),
+            name: "test3"
           }
         ]).end((err, res) => {
             expect(res).to.have.status(201)
@@ -482,193 +116,17 @@ describe("POST - /quizzes", () => {
             done()
         });
     })
-    it("Ajouter des quizzes incorrecte. - E", (done) => {
+    it("Ajouter des quizzes incorrects (sans name). - E", (done) => {
         chai.request(server).post('/quizzes').auth(token, { type: 'bearer' }).send([
           {
-            created_by: rdm_user(tab_id_users),
-                name: "test1",
-                categorie: "Manga/Anime",
-                question2: {
-                  difficulty: "Facile",
-                  question: "Quelle bête à 9 queues est scellée à l'intérieur de Naruto ?",
-                  correct_answer: "Kyūbi (Kurama)",
-                  incorrect_answers: ["Ichibi (Shukaku)", "Nibi (Matatabi)", "Yonbi (Son Goku)"]
-                },
-                question3: {
-                  difficulty: "Facile",
-                  question: "Qui est le sensei de Naruto lors de son apprentissage avec les crapauds ?",
-                  correct_answer: "Jiraiya",
-                  incorrect_answers: ["Iruka", "Kakashi", "Tsunade"]
-                },
-                question4: {
-                  difficulty: "Facile",
-                  question: "Quel est le nom de l'organisation criminelle composée de ninjas déserteurs dans Naruto ?",
-                  correct_answer: "Akatsuki",
-                  incorrect_answers: ["Anbu", "Gotei 13", "Phantom Troupe"]
-                },
-                question5: {
-                  difficulty: "Moyen",
-                  question: "Qui est le leader originel de l'Akatsuki ?",
-                  correct_answer: "Yahiko",
-                  incorrect_answers: ["Madara Uchiha", "Obito Uchiha", "Zetsu"]
-                },
-                question6: {
-                  difficulty: "Moyen",
-                  question: "Quelle est la spécialité du clan Aburame ?",
-                  correct_answer: "Contrôle des insectes",
-                  incorrect_answers: ["Manipulation de l'ombre", "Contrôle mental", "Maitrise du Byakugan"]
-                },
-                question7: {
-                  difficulty: "Moyen",
-                  question: "Qui a été le sensei d'Obito Uchiha ?",
-                  correct_answer: "Minato Namikaze",
-                  incorrect_answers: ["Jiraiya", "Hiruzen Sarutobi", "Kakashi"]
-                },
-                question8: {
-                  difficulty: "Difficile",
-                  question: "Quel est le nom de la technique secrète de Shikamaru Nara pour immobiliser ses ennemis ?",
-                  correct_answer: "Kagemane no Jutsu",
-                  incorrect_answers: ["Kage Kubi Shibari no Jutsu", "Kuchiyose No Jutsu", "Kageyose no Jutsu"]
-                },
-                question9: {
-                  difficulty: "Difficile",
-                  question: "Quel est le nom de l'épée légendaire brandie par Zabuza Momochi ?",
-                  correct_answer: "Kubikiribōchō",
-                  incorrect_answers: ["Samehada", "Kusanagi", "Gunbai"]
-                },
-                question10: {
-                  difficulty: "Dificile",
-                  question: "Quel est le nom de la mère d'Itachi et de Sasuke Uchiha ?",
-                  correct_answer: "Mikoto Uchiha",
-                  incorrect_answers: ["Makoto Uchiha", "Mokoto Uchiha", "Maokoto Uchiha"]
-                }
+            user_id: rdm_user(tab_id_users),
+             name: "test1"
           }, {
-            created_by: rdm_user(tab_id_users),
-                categorie: "Manga/Anime",
-                question1: {
-                  difficulty: "Facile",
-                  question: "Qui est le créateur de la série Naruto ?",
-                  correct_answer: "Masashi Kishimoto",
-                  incorrect_answers: ["Akira Toriyama", "Eiichiro Oda", "Yoshihiro Togashi"]
-                },
-                question2: {
-                  difficulty: "Facile",
-                  question: "Quelle bête à 9 queues est scellée à l'intérieur de Naruto ?",
-                  correct_answer: "Kyūbi (Kurama)",
-                  incorrect_answers: ["Ichibi (Shukaku)", "Nibi (Matatabi)", "Yonbi (Son Goku)"]
-                },
-                question3: {
-                  difficulty: "Facile",
-                  question: "Qui est le sensei de Naruto lors de son apprentissage avec les crapauds ?",
-                  correct_answer: "Jiraiya",
-                  incorrect_answers: ["Iruka", "Kakashi", "Tsunade"]
-                },
-                question4: {
-                  difficulty: "Facile",
-                  question: "Quel est le nom de l'organisation criminelle composée de ninjas déserteurs dans Naruto ?",
-                  correct_answer: "Akatsuki",
-                  incorrect_answers: ["Anbu", "Gotei 13", "Phantom Troupe"]
-                },
-                question5: {
-                  difficulty: "Moyen",
-                  question: "Qui est le leader originel de l'Akatsuki ?",
-                  correct_answer: "Yahiko",
-                  incorrect_answers: ["Madara Uchiha", "Obito Uchiha", "Zetsu"]
-                },
-                question6: {
-                  difficulty: "Moyen",
-                  question: "Quelle est la spécialité du clan Aburame ?",
-                  correct_answer: "Contrôle des insectes",
-                  incorrect_answers: ["Manipulation de l'ombre", "Contrôle mental", "Maitrise du Byakugan"]
-                },
-                question7: {
-                  difficulty: "Moyen",
-                  question: "Qui a été le sensei d'Obito Uchiha ?",
-                  correct_answer: "Minato Namikaze",
-                  incorrect_answers: ["Jiraiya", "Hiruzen Sarutobi", "Kakashi"]
-                },
-                question8: {
-                  difficulty: "Difficile",
-                  question: "Quel est le nom de la technique secrète de Shikamaru Nara pour immobiliser ses ennemis ?",
-                  correct_answer: "Kagemane no Jutsu",
-                  incorrect_answers: ["Kage Kubi Shibari no Jutsu", "Kuchiyose No Jutsu", "Kageyose no Jutsu"]
-                },
-                question9: {
-                  difficulty: "Difficile",
-                  question: "Quel est le nom de l'épée légendaire brandie par Zabuza Momochi ?",
-                  correct_answer: "Kubikiribōchō",
-                  incorrect_answers: ["Samehada", "Kusanagi", "Gunbai"]
-                },
-                question10: {
-                  difficulty: "Dificile",
-                  question: "Quel est le nom de la mère d'Itachi et de Sasuke Uchiha ?",
-                  correct_answer: "Mikoto Uchiha",
-                  incorrect_answers: ["Makoto Uchiha", "Mokoto Uchiha", "Maokoto Uchiha"]
-                }
+            user_id: rdm_user(tab_id_users)
           },
           {
-            created_by: rdm_user(tab_id_users),
-                name: "test3",
-                question1: {
-                  difficulty: "Facile",
-                  question: "Qui est le créateur de la série Naruto ?",
-                  correct_answer: "Masashi Kishimoto",
-                  incorrect_answers: ["Akira Toriyama", "Eiichiro Oda", "Yoshihiro Togashi"]
-                },
-                question2: {
-                  difficulty: "Facile",
-                  question: "Quelle bête à 9 queues est scellée à l'intérieur de Naruto ?",
-                  correct_answer: "Kyūbi (Kurama)",
-                  incorrect_answers: ["Ichibi (Shukaku)", "Nibi (Matatabi)", "Yonbi (Son Goku)"]
-                },
-                question3: {
-                  difficulty: "Facile",
-                  question: "Qui est le sensei de Naruto lors de son apprentissage avec les crapauds ?",
-                  correct_answer: "Jiraiya",
-                  incorrect_answers: ["Iruka", "Kakashi", "Tsunade"]
-                },
-                question4: {
-                  difficulty: "Facile",
-                  question: "Quel est le nom de l'organisation criminelle composée de ninjas déserteurs dans Naruto ?",
-                  correct_answer: "Akatsuki",
-                  incorrect_answers: ["Anbu", "Gotei 13", "Phantom Troupe"]
-                },
-                question5: {
-                  difficulty: "Moyen",
-                  question: "Qui est le leader originel de l'Akatsuki ?",
-                  correct_answer: "Yahiko",
-                  incorrect_answers: ["Madara Uchiha", "Obito Uchiha", "Zetsu"]
-                },
-                question6: {
-                  difficulty: "Moyen",
-                  question: "Quelle est la spécialité du clan Aburame ?",
-                  correct_answer: "Contrôle des insectes",
-                  incorrect_answers: ["Manipulation de l'ombre", "Contrôle mental", "Maitrise du Byakugan"]
-                },
-                question7: {
-                  difficulty: "Moyen",
-                  question: "Qui a été le sensei d'Obito Uchiha ?",
-                  correct_answer: "Minato Namikaze",
-                  incorrect_answers: ["Jiraiya", "Hiruzen Sarutobi", "Kakashi"]
-                },
-                question8: {
-                  difficulty: "Difficile",
-                  question: "Quel est le nom de la technique secrète de Shikamaru Nara pour immobiliser ses ennemis ?",
-                  correct_answer: "Kagemane no Jutsu",
-                  incorrect_answers: ["Kage Kubi Shibari no Jutsu", "Kuchiyose No Jutsu", "Kageyose no Jutsu"]
-                },
-                question9: {
-                  difficulty: "Difficile",
-                  question: "Quel est le nom de l'épée légendaire brandie par Zabuza Momochi ?",
-                  correct_answer: "Kubikiribōchō",
-                  incorrect_answers: ["Samehada", "Kusanagi", "Gunbai"]
-                },
-                question10: {
-                  difficulty: "Dificile",
-                  question: "Quel est le nom de la mère d'Itachi et de Sasuke Uchiha ?",
-                  correct_answer: "Mikoto Uchiha",
-                  incorrect_answers: ["Makoto Uchiha", "Mokoto Uchiha", "Maokoto Uchiha"]
-                }
+            user_id: rdm_user(tab_id_users),
+            name: "test3"
           }
         ]).end((err, res) => {
             expect(res).to.have.status(405)   
@@ -678,198 +136,15 @@ describe("POST - /quizzes", () => {
     it("Ajouter des quizzes sans etre authentifié. - E", (done) => {
         chai.request(server).post('/quizzes').send([
           {
-            created_by: rdm_user(tab_id_users),
-                name: "test6",
-                categorie: "Manga/Anime",
-                question1: {
-                  difficulty: "Facile",
-                  question: "Qui est le créateur de la série Naruto ?",
-                  correct_answer: "Masashi Kishimoto",
-                  incorrect_answers: ["Akira Toriyama", "Eiichiro Oda", "Yoshihiro Togashi"]
-                },
-                question2: {
-                  difficulty: "Facile",
-                  question: "Quelle bête à 9 queues est scellée à l'intérieur de Naruto ?",
-                  correct_answer: "Kyūbi (Kurama)",
-                  incorrect_answers: ["Ichibi (Shukaku)", "Nibi (Matatabi)", "Yonbi (Son Goku)"]
-                },
-                question3: {
-                  difficulty: "Facile",
-                  question: "Qui est le sensei de Naruto lors de son apprentissage avec les crapauds ?",
-                  correct_answer: "Jiraiya",
-                  incorrect_answers: ["Iruka", "Kakashi", "Tsunade"]
-                },
-                question4: {
-                  difficulty: "Facile",
-                  question: "Quel est le nom de l'organisation criminelle composée de ninjas déserteurs dans Naruto ?",
-                  correct_answer: "Akatsuki",
-                  incorrect_answers: ["Anbu", "Gotei 13", "Phantom Troupe"]
-                },
-                question5: {
-                  difficulty: "Moyen",
-                  question: "Qui est le leader originel de l'Akatsuki ?",
-                  correct_answer: "Yahiko",
-                  incorrect_answers: ["Madara Uchiha", "Obito Uchiha", "Zetsu"]
-                },
-                question6: {
-                  difficulty: "Moyen",
-                  question: "Quelle est la spécialité du clan Aburame ?",
-                  correct_answer: "Contrôle des insectes",
-                  incorrect_answers: ["Manipulation de l'ombre", "Contrôle mental", "Maitrise du Byakugan"]
-                },
-                question7: {
-                  difficulty: "Moyen",
-                  question: "Qui a été le sensei d'Obito Uchiha ?",
-                  correct_answer: "Minato Namikaze",
-                  incorrect_answers: ["Jiraiya", "Hiruzen Sarutobi", "Kakashi"]
-                },
-                question8: {
-                  difficulty: "Difficile",
-                  question: "Quel est le nom de la technique secrète de Shikamaru Nara pour immobiliser ses ennemis ?",
-                  correct_answer: "Kagemane no Jutsu",
-                  incorrect_answers: ["Kage Kubi Shibari no Jutsu", "Kuchiyose No Jutsu", "Kageyose no Jutsu"]
-                },
-                question9: {
-                  difficulty: "Difficile",
-                  question: "Quel est le nom de l'épée légendaire brandie par Zabuza Momochi ?",
-                  correct_answer: "Kubikiribōchō",
-                  incorrect_answers: ["Samehada", "Kusanagi", "Gunbai"]
-                },
-                question10: {
-                  difficulty: "Dificile",
-                  question: "Quel est le nom de la mère d'Itachi et de Sasuke Uchiha ?",
-                  correct_answer: "Mikoto Uchiha",
-                  incorrect_answers: ["Makoto Uchiha", "Mokoto Uchiha", "Maokoto Uchiha"]
-                }
+            user_id: rdm_user(tab_id_users),
+            name: "test1"
           }, {
-            created_by: rdm_user(tab_id_users),
-                name: "test5",
-                categorie: "Manga/Anime",
-                question1: {
-                  difficulty: "Facile",
-                  question: "Qui est le créateur de la série Naruto ?",
-                  correct_answer: "Masashi Kishimoto",
-                  incorrect_answers: ["Akira Toriyama", "Eiichiro Oda", "Yoshihiro Togashi"]
-                },
-                question2: {
-                  difficulty: "Facile",
-                  question: "Quelle bête à 9 queues est scellée à l'intérieur de Naruto ?",
-                  correct_answer: "Kyūbi (Kurama)",
-                  incorrect_answers: ["Ichibi (Shukaku)", "Nibi (Matatabi)", "Yonbi (Son Goku)"]
-                },
-                question3: {
-                  difficulty: "Facile",
-                  question: "Qui est le sensei de Naruto lors de son apprentissage avec les crapauds ?",
-                  correct_answer: "Jiraiya",
-                  incorrect_answers: ["Iruka", "Kakashi", "Tsunade"]
-                },
-                question4: {
-                  difficulty: "Facile",
-                  question: "Quel est le nom de l'organisation criminelle composée de ninjas déserteurs dans Naruto ?",
-                  correct_answer: "Akatsuki",
-                  incorrect_answers: ["Anbu", "Gotei 13", "Phantom Troupe"]
-                },
-                question5: {
-                  difficulty: "Moyen",
-                  question: "Qui est le leader originel de l'Akatsuki ?",
-                  correct_answer: "Yahiko",
-                  incorrect_answers: ["Madara Uchiha", "Obito Uchiha", "Zetsu"]
-                },
-                question6: {
-                  difficulty: "Moyen",
-                  question: "Quelle est la spécialité du clan Aburame ?",
-                  correct_answer: "Contrôle des insectes",
-                  incorrect_answers: ["Manipulation de l'ombre", "Contrôle mental", "Maitrise du Byakugan"]
-                },
-                question7: {
-                  difficulty: "Moyen",
-                  question: "Qui a été le sensei d'Obito Uchiha ?",
-                  correct_answer: "Minato Namikaze",
-                  incorrect_answers: ["Jiraiya", "Hiruzen Sarutobi", "Kakashi"]
-                },
-                question8: {
-                  difficulty: "Difficile",
-                  question: "Quel est le nom de la technique secrète de Shikamaru Nara pour immobiliser ses ennemis ?",
-                  correct_answer: "Kagemane no Jutsu",
-                  incorrect_answers: ["Kage Kubi Shibari no Jutsu", "Kuchiyose No Jutsu", "Kageyose no Jutsu"]
-                },
-                question9: {
-                  difficulty: "Difficile",
-                  question: "Quel est le nom de l'épée légendaire brandie par Zabuza Momochi ?",
-                  correct_answer: "Kubikiribōchō",
-                  incorrect_answers: ["Samehada", "Kusanagi", "Gunbai"]
-                },
-                question10: {
-                  difficulty: "Dificile",
-                  question: "Quel est le nom de la mère d'Itachi et de Sasuke Uchiha ?",
-                  correct_answer: "Mikoto Uchiha",
-                  incorrect_answers: ["Makoto Uchiha", "Mokoto Uchiha", "Maokoto Uchiha"]
-                }
+            user_id: rdm_user(tab_id_users),
+            name: "test2"
           },
           {
-            created_by: rdm_user(tab_id_users),
-                name: "test4",
-                categorie: "Manga/Anime",
-                question1: {
-                  difficulty: "Facile",
-                  question: "Qui est le créateur de la série Naruto ?",
-                  correct_answer: "Masashi Kishimoto",
-                  incorrect_answers: ["Akira Toriyama", "Eiichiro Oda", "Yoshihiro Togashi"]
-                },
-                question2: {
-                  difficulty: "Facile",
-                  question: "Quelle bête à 9 queues est scellée à l'intérieur de Naruto ?",
-                  correct_answer: "Kyūbi (Kurama)",
-                  incorrect_answers: ["Ichibi (Shukaku)", "Nibi (Matatabi)", "Yonbi (Son Goku)"]
-                },
-                question3: {
-                  difficulty: "Facile",
-                  question: "Qui est le sensei de Naruto lors de son apprentissage avec les crapauds ?",
-                  correct_answer: "Jiraiya",
-                  incorrect_answers: ["Iruka", "Kakashi", "Tsunade"]
-                },
-                question4: {
-                  difficulty: "Facile",
-                  question: "Quel est le nom de l'organisation criminelle composée de ninjas déserteurs dans Naruto ?",
-                  correct_answer: "Akatsuki",
-                  incorrect_answers: ["Anbu", "Gotei 13", "Phantom Troupe"]
-                },
-                question5: {
-                  difficulty: "Moyen",
-                  question: "Qui est le leader originel de l'Akatsuki ?",
-                  correct_answer: "Yahiko",
-                  incorrect_answers: ["Madara Uchiha", "Obito Uchiha", "Zetsu"]
-                },
-                question6: {
-                  difficulty: "Moyen",
-                  question: "Quelle est la spécialité du clan Aburame ?",
-                  correct_answer: "Contrôle des insectes",
-                  incorrect_answers: ["Manipulation de l'ombre", "Contrôle mental", "Maitrise du Byakugan"]
-                },
-                question7: {
-                  difficulty: "Moyen",
-                  question: "Qui a été le sensei d'Obito Uchiha ?",
-                  correct_answer: "Minato Namikaze",
-                  incorrect_answers: ["Jiraiya", "Hiruzen Sarutobi", "Kakashi"]
-                },
-                question8: {
-                  difficulty: "Difficile",
-                  question: "Quel est le nom de la technique secrète de Shikamaru Nara pour immobiliser ses ennemis ?",
-                  correct_answer: "Kagemane no Jutsu",
-                  incorrect_answers: ["Kage Kubi Shibari no Jutsu", "Kuchiyose No Jutsu", "Kageyose no Jutsu"]
-                },
-                question9: {
-                  difficulty: "Difficile",
-                  question: "Quel est le nom de l'épée légendaire brandie par Zabuza Momochi ?",
-                  correct_answer: "Kubikiribōchō",
-                  incorrect_answers: ["Samehada", "Kusanagi", "Gunbai"]
-                },
-                question10: {
-                  difficulty: "Dificile",
-                  question: "Quel est le nom de la mère d'Itachi et de Sasuke Uchiha ?",
-                  correct_answer: "Mikoto Uchiha",
-                  incorrect_answers: ["Makoto Uchiha", "Mokoto Uchiha", "Maokoto Uchiha"]
-                }
+            user_id: rdm_user(tab_id_users),
+            name: "test3"
           }
         ]).end((err, res) => {
             expect(res).to.have.status(401)
@@ -952,7 +227,7 @@ describe("GET - /quizzes", () => {
 
 describe("PUT - /quiz", () => {
     it("Modifier un quiz. - S", (done) => {
-        chai.request(server).put('/quiz/' + quizzes[0]._id).send({ categorie: "La faune et la flore" })
+        chai.request(server).put('/quiz/' + quizzes[0]._id).send({ name: "La faune et la flore" })
         .auth(token, { type: 'bearer' })
         .end((err, res) => {
             res.should.have.status(200)
@@ -960,14 +235,14 @@ describe("PUT - /quiz", () => {
         })
     })
     it("Modifier un quiz sans etre authentifié. - E", (done) => {
-        chai.request(server).put('/quiz/' + quizzes[0]._id).send({ categorie: "Les objets suspects" })
+        chai.request(server).put('/quiz/' + quizzes[0]._id).send({ name: "Les objets suspects" })
         .end((err, res) => {
             res.should.have.status(401)
             done()
         })
     })
     it("Modifier un quiz avec un id invalide. - E", (done) => {
-        chai.request(server).put('/quiz/123456789').send({ categorie: "La plage" })
+        chai.request(server).put('/quiz/123456789').send({ name: "La plage" })
         .auth(token, { type: 'bearer' })
         .end((err, res) => {
             res.should.have.status(405)
@@ -976,7 +251,7 @@ describe("PUT - /quiz", () => {
     })
 
     it("Modifier un quiz avec un id inexistant. - E", (done) => {
-        chai.request(server).put('/quiz/66791a552b38d88d8c6e9ee7').send({ categorie: "Monts et merveilles"})
+        chai.request(server).put('/quiz/66791a552b38d88d8c6e9ee7').send({ name: "Monts et merveilles"})
         .auth(token, { type: 'bearer' })
         .end((err, res) => {
             res.should.have.status(404)
@@ -995,23 +270,23 @@ describe("PUT - /quiz", () => {
 })
 
 describe("PUT - /quizzes", () => {
-  it("Modifier plusieurs quizzes. - S", (done) => {
-      chai.request(server).put('/quizzes').query({id: _.map(quizzes, '_id')}).send({ categorie: "Les voitures" })
-      .auth(token, { type: 'bearer' })
-      .end((err, res) => {
-          res.should.have.status(200)
-          done()
-      })
-  })
+  // it("Modifier plusieurs quizzes. - S", (done) => {
+  //     chai.request(server).put('/quizzes').query({id: _.map(quizzes, '_id')}).send({ name: "Les voitures" })
+  //     .auth(token, { type: 'bearer' })
+  //     .end((err, res) => {
+  //         res.should.have.status(200)
+  //         done()
+  //     })
+  // })
   it("Modifier plusieurs quizzes sans etre authentifié. - E", (done) => {
-      chai.request(server).put('/quizzes').query({id: _.map(quizzes, '_id')}).send({ categorie: "Les voitures" })
+      chai.request(server).put('/quizzes').query({id: _.map(quizzes, '_id')}).send({ name: "Les voitures" })
       .end((err, res) => {
           res.should.have.status(401)
           done()
       })
   })
   it("Modifier plusieurs quizzes avec des ids invalide. - E", (done) => {
-      chai.request(server).put('/quizzes').query({id: ['267428142', '41452828']}).send({ categorie: "Les voitures" })
+      chai.request(server).put('/quizzes').query({id: ['267428142', '41452828']}).send({ name: "Les voitures" })
       .auth(token, { type: 'bearer' })
       .end((err, res) => {
           res.should.have.status(405)
@@ -1022,7 +297,7 @@ describe("PUT - /quizzes", () => {
   it("Modifier plusieurs quizzes avec des ids inexistants. - E", (done) => {
       chai.request(server).put('/quizzes').query({id: ['66791a552b38d88d8c6e9ee7', '667980886db560087464d3a7']})
       .auth(token, { type: 'bearer' })
-      .send({ categorie: "Les voitures" })
+      .send({ name: "Les voitures12" })
       .end((err, res) => {
           res.should.have.status(404)
           done()

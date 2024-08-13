@@ -1,5 +1,6 @@
 const UserService = require('../../services/UserService')
 const CategorieService = require('../../services/CategorieService')
+const QuizService = require('../../services/QuizService')
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const expect = chai.expect;
@@ -8,6 +9,7 @@ const _ = require('lodash')
 let should = chai.should();
 var tab_id_users = []
 var tab_id_categories = []
+let tab_id_quizzes = []
 var questions = []
 let token
 
@@ -53,21 +55,52 @@ let categories = [
   },
 ];
 
-describe("POST - /users", () => {
-    it("Création des utilisateurs fictif", (done) => {
-        UserService.addManyUsers(users, null, function (err, value) {
-            tab_id_users = _.map(value, '_id')
-            done()
-        })
+let quizzes = [
+    {
+        name: "Quiz 1",
+    },
+    {
+        name: "Quiz 2",
+    },
+    {
+        name: "Quiz 3",
+    },
+    {
+        name: "Quiz 4",
+    },
+]
+
+
+it("Création des utilisateurs fictif", (done) => {
+    UserService.addManyUsers(users, null, function (err, value) {
+        tab_id_users = _.map(value, '_id')
+        done()
     })
 })
 
-describe("POST - /categories", () => {
-    it("Création des categories fictives", (done) => {
-        CategorieService.addManyCategories(categories, null, function (err, value) {
-            tab_id_categories = _.map(value, '_id')
-            done()
-        })
+
+it("Création des catégories fictives", (done) => {
+    categories = _.map(categories, (e) => {
+        e.user_id = rdm_user(tab_id_users)
+        console.log(e, "TEST ID CAT")
+        return e
+    })
+  CategorieService.addManyCategories(categories, null, function (err, value) {
+      tab_id_categories = _.map(value, '_id')
+      console.log(err, "TEST CATEGORIE FICTIVE")
+      done()
+  })
+})
+
+it("Création des quizzes fictifs", (done) => {
+    quizzes = _.map(quizzes, (e) => {
+        e.user_id = rdm_user(tab_id_users)
+        return e
+    })
+    QuizService.addManyQuizzes(quizzes, null, function (err, value) {
+        tab_id_quizzes = _.map(value, '_id')
+        console.log(err, "TEST QUIZZES FICTIF")
+        done()
     })
 })
 
@@ -80,7 +113,17 @@ describe("POST - /login", () => {
     })
 })
 
+function rdm_user(tab) {
+    let rdm_id = tab[Math.floor(Math.random() * (tab.length - 1))]
+    return rdm_id
+}
+
 function rdm_categorie(tab) {
+    let rdm_id = tab[Math.floor(Math.random() * (tab.length - 1))]
+    return rdm_id
+}
+
+function rdm_quiz(tab) {
     let rdm_id = tab[Math.floor(Math.random() * (tab.length - 1))]
     return rdm_id
 }
@@ -91,7 +134,9 @@ chai.use(chaiHttp)
 describe("POST - /question", () => {
     it("Ajouter une question. - S", (done) => {
         chai.request(server).post('/question').auth(token, { type: 'bearer' }).send({
+            user_id: rdm_user(tab_id_users),
             categorie_id: rdm_categorie(tab_id_categories),
+            quiz_id: rdm_quiz(tab_id_quizzes),
             question: "Quel est le nom du personnage principal de la série 'Devil May Cry' ?",
             difficulty: "Facile",
             correct_answer: "Dante",
@@ -104,7 +149,9 @@ describe("POST - /question", () => {
     })
     it("Ajouter une question incorrect. (Sans question) - E", (done) => {
         chai.request(server).post('/question').send({
+          user_id: rdm_user(tab_id_users),
           categorie_id: rdm_categorie(tab_id_categories),
+          quiz_id: rdm_quiz(tab_id_quizzes),
           difficulty: "Facile",
           correct_answer: "Dante",
           incorrect_answers: ["Nero", "Vergil", "Trish"]
@@ -117,7 +164,9 @@ describe("POST - /question", () => {
     })
     it("Ajouter une question incorrect. (Avec un champ vide) - E", (done) => {
         chai.request(server).post('/question').send({
+          user_id: rdm_user(tab_id_users),
           categorie_id: rdm_categorie(tab_id_categories),
+          quiz_id: rdm_quiz(tab_id_quizzes),
           question: "",
           difficulty: "Facile",
           correct_answer: "Dante",
@@ -135,21 +184,27 @@ describe("POST - /questions", () => {
     it("Ajouter des questions. - S", (done) => {
         chai.request(server).post('/questions').auth(token, { type: 'bearer' }).send([
             {
+              user_id: rdm_user(tab_id_users),
               categorie_id: rdm_categorie(tab_id_categories),
+              quiz_id: rdm_quiz(tab_id_quizzes),
               question: "Dans quel jeu vidéo les joueurs peuvent-ils incarner un chasseur de monstres dans un monde fantastique ?",
               difficulty: "Facile",
               correct_answer: "Monster Hunter",
               incorrect_answers: ["World of Warcraft", "Dark Souls", "Trish"]
             },
             {
+              user_id: rdm_user(tab_id_users),
               categorie_id: rdm_categorie(tab_id_categories),
+              quiz_id: rdm_quiz(tab_id_quizzes),
               question: "Qui est le personnage principal des jeux vidéo 'The Legend of Zelda' ?",
               difficulty: "Facile",
               correct_answer: "Link",
               incorrect_answers: ["Ganon", "Epona", "Zelda"]
             },
             {
+              user_id: rdm_user(tab_id_users),
               categorie_id: rdm_categorie(tab_id_categories),
+              quiz_id: rdm_quiz(tab_id_quizzes),
               question: "Quel est le nom de la famille noble régnant sur le Trône de Fer au début des premiers épisodes de la série 'Game of Thrones' ?",
               difficulty: "Facile",
               correct_answer: "Lannister",
@@ -181,21 +236,27 @@ describe("POST - /questions", () => {
     it("Ajouter des questions sans etre authentifié. - E", (done) => {
         chai.request(server).post('/questions').send([
             {
+              user_id: rdm_user(tab_id_users),
               categorie_id: rdm_categorie(tab_id_categories),
+              quiz_id: rdm_quiz(tab_id_quizzes),
               question: "Quelle actrice incarne Phoebe dans la série TV 'Charmed' ?",
               difficulty: "Moyen",
               correct_answer: "Alyssa Milano",
               incorrect_answers: ["Shannen Doherty", "Holly Marie Combs", "Rose McGowan"]
             },
             {
+              user_id: rdm_user(tab_id_users),
               categorie_id: rdm_categorie(tab_id_categories),
+              quiz_id: rdm_quiz(tab_id_quizzes),
               question: "Quel acteur incarne Lex Luthor dans la série TV Smallville ?",
               difficulty: "Difficile",
               correct_answer: "Michael Rosenbaum",
               incorrect_answers: ["Tom Welling", "Justin Hartley", "John Schneider"]
             },
             {
+              user_id: rdm_user(tab_id_users),
               categorie_id: rdm_categorie(tab_id_categories),
+              quiz_id: rdm_quiz(tab_id_quizzes),
               question: "Dans 'Peaky Blinders', quelle est la ville principale où se déroule l'action de la série ?",
               difficulty: "Difficile",
               correct_answer: "Birmingham",
@@ -449,6 +510,14 @@ describe("DELETE - /questions", () => {
 describe("DELETE - /categories", () => {
     it("Suppression des categories fictives", (done) => {
         CategorieService.deleteManyCategories(tab_id_categories, null, function (err, value) {
+            done()
+        })
+    })
+})
+
+describe("DELETE - /quizzes", () => {
+    it("Suppression des quiz fictif", (done) => {
+        QuizService.deleteManyQuizzes(tab_id_quizzes, null, function (err, value) {
             done()
         })
     })

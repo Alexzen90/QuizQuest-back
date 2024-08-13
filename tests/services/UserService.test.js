@@ -169,7 +169,6 @@ describe("findOneUser", () => {
 describe("findManyUsers", () => {
     it("Retourne 4 utilisateurs - S", (done) => {
         UserService.findManyUsers(null, 3, 1, null, function (err, value) {
-            console.log(value)
             expect(value).to.haveOwnProperty("count")
             expect(value).to.haveOwnProperty("results")
             expect(value["count"]).to.be.equal(4)

@@ -58,7 +58,7 @@ describe("addOneCategorie", () => {
     it("Categorie correct. - S", (done) => {
         var categorie = {
             user_id: rdm_user(tab_id_users),
-            name: "test",
+            name: "test"
         }
         CategorieService.addOneCategorie(categorie, null, function(err, value) {
             expect(value).to.be.a('object');
@@ -71,10 +71,11 @@ describe("addOneCategorie", () => {
     })
     it("Categorie incorrect. (Sans name) - E", (done) => {
         var categorie_no_valid = {
-            user_id: rdm_user(tab_id_users),
+            user_id: rdm_user(tab_id_users)
         }
         CategorieService.addOneCategorie(categorie_no_valid,  null, function (err, value) {
             expect(err).to.haveOwnProperty('msg')
+            console.log("LAAAAAAAAAAAAAAAAAAAAAAAAAAAA", err)
             expect(err).to.haveOwnProperty('fields_with_error').with.lengthOf(1)
             expect(err).to.haveOwnProperty('fields')
             expect(err['fields']).to.haveOwnProperty('name')
@@ -84,6 +85,7 @@ describe("addOneCategorie", () => {
     })
     it("Categorie incorrect. (name vide) - E", (done) => {
         var categorie_no_valid = {
+            user_id: rdm_user(tab_id_users),
             name: ""
         }
         CategorieService.addOneCategorie(categorie_no_valid, null, function (err, value) {
