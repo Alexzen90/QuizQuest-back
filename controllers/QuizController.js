@@ -126,7 +126,6 @@ module.exports.findOneQuiz = function(req, res){
     })
 }
 
-// La fonction permet de chercher plusieurs utilisateurs
 module.exports.findManyQuizzes = function(req, res) {
     req.log.info("Recherche de plusieurs quizzes")
     let page = req.query.page

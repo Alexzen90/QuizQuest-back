@@ -195,7 +195,19 @@ module.exports.findManyQuestions = function(search, limit, page, options, callba
     if (typeof page !== "number" || typeof limit !== "number" || isNaN(page) || isNaN(limit)) {
         callback ({msg: `format de ${typeof page !== "number" ? "page" : "limit"} est incorrect`, type_error: "no-valid"})
     }else{
-        let query_mongo = search ? {$or: _.map(["question"], (e) => {return {[e]: {$regex: search}}})} : {}
+        let query_mongo = {}
+        
+        if (mongoose.isValidObjectId(search)) {
+            query_mongo = {
+                $or: [
+                    { quiz_id: new ObjectId(search) },
+                    { categorie_id: new ObjectId(search) }
+                ]
+            };
+        } else {
+            query_mongo["question"] = { $regex: search, $options: 'i' };
+        }
+        
         Question.countDocuments(query_mongo).then((value) => {
             if (value > 0) {
                 const skip = ((page - 1) * limit)

@@ -132,6 +132,10 @@ app.get('/question/:id', DatabaseMiddleware.checkConnection, passport.authentica
 // Création du endpoint /questions pour la récupération de plusieurs questions via l'idS
 app.get('/questions', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuestionController.findManyQuestionsById)
 
+app.get('/question', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuestionController.findOneQuestion)
+
+app.get('/questions_by_filters', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuestionController.findManyQuestions)
+
 // Création du endpoint /question pour la modification d'une question
 app.put('/question/:id', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuestionController.updateOneQuestion)
 
