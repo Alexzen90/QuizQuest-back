@@ -8,9 +8,7 @@ var Question = mongoose.model('Question', QuestionSchema)
 Question.createIndexes()
 
 module.exports.addOneQuestion = async function (question, options, callback) {
-    console.log(options, "OPTIONNNNSNSNSSNSN")
     try {
-        console.log(options, question)
         var new_question = new Question(question);
         var errors = new_question.validateSync();
         if (errors) {
@@ -27,25 +25,21 @@ module.exports.addOneQuestion = async function (question, options, callback) {
                 fields: fields,
                 type_error: "validator"
             };
-            callback(err);
+            callback(err)
         } else {
             await new_question.save();
-            callback(null, new_question.toObject());
+            callback(null, new_question.toObject())
         }
     } catch (error) {
         console.log(error)
-        callback(error); // Autres erreurs
+        callback(error)
     }
 };
 
 module.exports.addManyQuestions = async function (questions, options, callback) {
-    var errors = [];
-    // Vérifier les erreurs de validation
+    var errors = []
     for (var i = 0; i < questions.length; i++) {
         var question = questions[i];
-        question.categorie_id = options && options.categorie ? options.categorie._id : question.categorie_id
-        question.user_id = options && options.user ? options.user._id : question.user_id
-        question.quiz_id = options && options.quiz ? options.quiz._id : question.quiz_id
         var new_question = new Question(question);
         var error = new_question.validateSync();
         if (error) {
@@ -196,12 +190,12 @@ module.exports.findManyQuestions = function(search, limit, page, options, callba
         callback ({msg: `format de ${typeof page !== "number" ? "page" : "limit"} est incorrect`, type_error: "no-valid"})
     }else{
         let query_mongo = {}
-        
         if (mongoose.isValidObjectId(search)) {
             query_mongo = {
                 $or: [
                     { quiz_id: new ObjectId(search) },
-                    { categorie_id: new ObjectId(search) }
+                    { categorie_id: new ObjectId(search) },
+                    { user_id: new ObjectId(search) }
                 ]
             };
         } else {

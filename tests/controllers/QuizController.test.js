@@ -1,4 +1,5 @@
 const UserService = require('../../services/UserService')
+const CategorieService = require('../../services/CategorieService')
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const expect = chai.expect;
@@ -6,6 +7,7 @@ const server = require('./../../server')
 const _ = require('lodash')
 let should = chai.should();
 var tab_id_users = []
+var tab_id_categories = []
 var quizzes = []
 let token
 
@@ -36,14 +38,43 @@ let users = [
   },
 ];
 
-describe("POST - /users", () => {
-    it("Création des utilisateurs fictifs", (done) => {
-        UserService.addManyUsers(users, null, function (err, value) {
-            tab_id_users = _.map(value, '_id')
-            done()
-        })
+let categories = [
+    {
+        name: "Le corps humain"
+    },
+    {
+        name: "Les fonds marins"
+    },
+    {
+        name: "Musique"
+    },
+    {
+        name: "Vacances"
+    },
+];
+
+it("Création des utilisateurs fictif", (done) => {
+    UserService.addManyUsers(users, null, function (err, value) {
+        tab_id_users = _.map(value, '_id')
+        done()
     })
 })
+
+it("Création des catégories fictives", (done) => {
+    categories = _.map(categories, (e) => {
+        e.user_id = rdm_item(tab_id_users)
+        return e
+    })
+  CategorieService.addManyCategories(categories, null, function (err, value) {
+      tab_id_categories = _.map(value, '_id')
+      done()
+  })
+})
+
+function rdm_item(tab) {
+    let rdm_id = tab[Math.floor(Math.random() * (tab.length - 1))]
+    return rdm_id
+}
 
 describe("POST - /login", () => {
     it("Authentification d'un utilisateur fictif.", (done) => {
@@ -54,10 +85,7 @@ describe("POST - /login", () => {
     })
 })
 
-function rdm_user(tab) {
-    let rdm_id = tab[Math.floor(Math.random() * (tab.length - 1))]
-    return rdm_id
-}
+
 
 chai.use(chaiHttp)
 
@@ -65,9 +93,11 @@ chai.use(chaiHttp)
 describe("POST - /quiz", () => {
     it("Ajouter un quiz. - S", (done) => {
         chai.request(server).post('/quiz').auth(token, { type: 'bearer' }).send({
-          user_id: rdm_user(tab_id_users),
+          user_id: rdm_item(tab_id_users),
+          categorie_id: rdm_item(tab_id_categories),
           name: "Quiz sur Naruto",
         }).end((err, res) => {
+            console.log(res.body)
             expect(res).to.have.status(201)
             quizzes.push(res.body)
             done()
@@ -75,7 +105,8 @@ describe("POST - /quiz", () => {
     })
     it("Ajouter un quiz incorrect. (Sans name) - E", (done) => {
         chai.request(server).post('/quiz').send({
-          user_id: rdm_user(tab_id_users)
+          user_id: rdm_item(tab_id_users),
+          categorie_id: rdm_item(tab_id_categories)
         })
         .auth(token, { type: 'bearer' })
         .end((err, res) => {
@@ -85,7 +116,8 @@ describe("POST - /quiz", () => {
     })
     it("Ajouter un quiz incorrect. (Avec un champ vide) - E", (done) => {
         chai.request(server).post('/quiz').send({
-          user_id: rdm_user(tab_id_users),
+          user_id: rdm_item(tab_id_users),
+          categorie_id: rdm_item(tab_id_categories),
           name: ""
         })
         .auth(token, { type: 'bearer' })
@@ -100,14 +132,17 @@ describe("POST - /quizzes", () => {
     it("Ajouter des quizzes. - S", (done) => {
         chai.request(server).post('/quizzes').auth(token, { type: 'bearer' }).send([
           {
-            user_id: rdm_user(tab_id_users),
+            user_id: rdm_item(tab_id_users),
+            categorie_id: rdm_item(tab_id_categories),
             name: "test1"
           }, {
-            user_id: rdm_user(tab_id_users),
+            user_id: rdm_item(tab_id_users),
+            categorie_id: rdm_item(tab_id_categories),
             name: "test2"
           },
           {
-            user_id: rdm_user(tab_id_users),
+            user_id: rdm_item(tab_id_users),
+            categorie_id: rdm_item(tab_id_categories),
             name: "test3"
           }
         ]).end((err, res) => {
@@ -119,13 +154,15 @@ describe("POST - /quizzes", () => {
     it("Ajouter des quizzes incorrects (sans name). - E", (done) => {
         chai.request(server).post('/quizzes').auth(token, { type: 'bearer' }).send([
           {
-            user_id: rdm_user(tab_id_users),
-             name: "test1"
+            user_id: rdm_item(tab_id_users),
+            categorie_id: rdm_item(tab_id_categories),
+            name: "test1"
           }, {
-            user_id: rdm_user(tab_id_users)
+            user_id: rdm_item(tab_id_users),
+            categorie_id: rdm_item(tab_id_categories)
           },
           {
-            user_id: rdm_user(tab_id_users),
+            user_id: rdm_item(tab_id_users),
             name: "test3"
           }
         ]).end((err, res) => {
@@ -136,14 +173,17 @@ describe("POST - /quizzes", () => {
     it("Ajouter des quizzes sans etre authentifié. - E", (done) => {
         chai.request(server).post('/quizzes').send([
           {
-            user_id: rdm_user(tab_id_users),
+            user_id: rdm_item(tab_id_users),
+            categorie_id: rdm_item(tab_id_categories),
             name: "test1"
           }, {
-            user_id: rdm_user(tab_id_users),
+            user_id: rdm_item(tab_id_users),
+            categorie_id: rdm_item(tab_id_categories),
             name: "test2"
           },
           {
-            user_id: rdm_user(tab_id_users),
+            user_id: rdm_item(tab_id_users),
+            categorie_id: rdm_item(tab_id_categories),
             name: "test3"
           }
         ]).end((err, res) => {
@@ -270,23 +310,23 @@ describe("PUT - /quiz", () => {
 })
 
 describe("PUT - /quizzes", () => {
-  // it("Modifier plusieurs quizzes. - S", (done) => {
-  //     chai.request(server).put('/quizzes').query({id: _.map(quizzes, '_id')}).send({ name: "Les voitures" })
-  //     .auth(token, { type: 'bearer' })
-  //     .end((err, res) => {
-  //         res.should.have.status(200)
-  //         done()
-  //     })
-  // })
+  it("Modifier plusieurs quizzes. - S", (done) => {
+      chai.request(server).put('/quizzes').query({id: _.map(quizzes, '_id')}).send({ category_id: rdm_item(categories)._id })
+      .auth(token, { type: 'bearer' })
+      .end((err, res) => {
+          res.should.have.status(200)
+          done()
+      })
+  })
   it("Modifier plusieurs quizzes sans etre authentifié. - E", (done) => {
-      chai.request(server).put('/quizzes').query({id: _.map(quizzes, '_id')}).send({ name: "Les voitures" })
+      chai.request(server).put('/quizzes').query({id: _.map(quizzes, '_id')}).send({ category_id: rdm_item(categories)._id })
       .end((err, res) => {
           res.should.have.status(401)
           done()
       })
   })
   it("Modifier plusieurs quizzes avec des ids invalide. - E", (done) => {
-      chai.request(server).put('/quizzes').query({id: ['267428142', '41452828']}).send({ name: "Les voitures" })
+      chai.request(server).put('/quizzes').query({id: ['267428142', '41452828']}).send({ category_id: rdm_item(categories)._id })
       .auth(token, { type: 'bearer' })
       .end((err, res) => {
           res.should.have.status(405)
@@ -389,6 +429,14 @@ describe("DELETE - /quizzes", () => {
             done()
         })
     })
+})
+
+describe("DELETE - /categories", () => {
+    it("Suppression des categories fictives", (done) => {
+        CategorieService.deleteManyCategories(tab_id_categories, null, function (err, value) {
+            done()
+        })
+    })  
 })
 
 describe("DELETE - /users", () => {

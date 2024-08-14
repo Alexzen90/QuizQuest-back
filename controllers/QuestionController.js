@@ -7,7 +7,6 @@ module.exports.addOneQuestion = function(req, res) {
     req.log.info("Création d'une question")
     let options = {user: req.user, categorie: req.query.categorie_id, quiz: req.query.quiz_id}
 
-
     QuestionService.addOneQuestion(req.body, options, function(err, value) {
         if (err && err.type_error == "no found") {
             res.statusCode = 404

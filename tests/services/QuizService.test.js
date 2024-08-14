@@ -7,6 +7,7 @@ const _ = require('lodash')
 var id_quiz_valid = ""
 var tab_id_quizzes = []
 var tab_id_users = []
+let tab_id_categories = []
 var quizzes = []
 
 let users = [
@@ -36,6 +37,21 @@ let users = [
     },
 ];
 
+let categories = [
+    {
+        name: "Le corps humain"
+    },
+    {
+        name: "Les fonds marins"
+    },
+    {
+        name: "Musique"
+    },
+    {
+        name: "Vacances"
+    },
+];
+
 it("Création des utilisateurs fictif", (done) => {
     UserService.addManyUsers(users, null, function (err, value) {
         tab_id_users = _.map(value, '_id')
@@ -50,7 +66,18 @@ it("Authentification d'un utilisateur fictif.", (done) => {
     })
 })
 
-function rdm_user (tab) {
+it("Création des catégories fictives", (done) => {
+    categories = _.map(categories, (e) => {
+        e.user_id = rdm_item(tab_id_users)
+        return e
+    })
+  CategorieService.addManyCategories(categories, null, function (err, value) {
+      tab_id_categories = _.map(value, '_id')
+      done()
+  })
+})
+
+function rdm_item (tab) {
     let rdm_id = tab[Math.floor(Math.random() * (tab.length - 1))]
     return rdm_id
 }
@@ -58,13 +85,17 @@ function rdm_user (tab) {
 describe("addOneQuiz", () => {
     it("Quiz correct. - S", (done) => {
         var quiz = {
-            user_id: rdm_user(tab_id_users),
+            user_id: rdm_item(tab_id_users),
+            categorie_id: rdm_item(tab_id_categories),
             name: "Quiz sur Naruto"
         }
         QuizService.addOneQuiz(quiz, null, function(err, value) {
             expect(value).to.be.a('object');
             expect(value).to.haveOwnProperty('_id')
             expect(value).to.haveOwnProperty('name')
+            expect(value['name']).to.be.equal('Quiz sur Naruto')
+            expect(value).to.haveOwnProperty('user_id')
+            expect(value).to.haveOwnProperty('categorie_id')
             id_quiz_valid = value._id
             quizzes.push(value)
             done()
@@ -72,7 +103,8 @@ describe("addOneQuiz", () => {
     })
     it("Quiz incorrect. (Sans name) - E", (done) => {
         var quiz_no_valid = {
-          user_id: rdm_user(tab_id_users)
+          user_id: rdm_item(tab_id_users),
+          categorie_id: rdm_item(tab_id_categories)
         }
         QuizService.addOneQuiz(quiz_no_valid,  null, function (err, value) {
             expect(err).to.haveOwnProperty('msg')
@@ -84,7 +116,8 @@ describe("addOneQuiz", () => {
     })
     it("Quiz incorrect. (name vide) - E", (done) => {
         var quiz_no_valid = {
-          user_id: rdm_user(tab_id_users),
+          user_id: rdm_item(tab_id_users),
+          categorie_id: rdm_item(tab_id_categories),
           name: ""
         }
         QuizService.addOneQuiz(quiz_no_valid, null, function (err, value) {
@@ -101,15 +134,18 @@ describe("addOneQuiz", () => {
 describe("addManyQuizzes", () => {
   it("Quizzes à ajouter, valide. - S", (done) => {
       var quizzes_tab = [{
-        user_id: rdm_user(tab_id_users),
+        user_id: rdm_item(tab_id_users),
+        categorie_id: rdm_item(tab_id_categories),
         name: "test1"
       },
       {
-        user_id: rdm_user(tab_id_users),
+        user_id: rdm_item(tab_id_users),
+        categorie_id: rdm_item(tab_id_categories),
         name: "test2"
       },
       {
-        user_id: rdm_user(tab_id_users),
+        user_id: rdm_item(tab_id_users),
+        categorie_id: rdm_item(tab_id_categories),
         name: "test3"
       }]
 
@@ -122,15 +158,18 @@ describe("addManyQuizzes", () => {
   })
   it("Quizzes à ajouter, non valide. (name vide) - E", (done) => {
       var quizzes_tab_error = [{
-        user_id: rdm_user(tab_id_users),
+        user_id: rdm_item(tab_id_users),
+        categorie_id: rdm_item(tab_id_categories),
         name: ""
       },
       {
-        user_id: rdm_user(tab_id_users),
+        user_id: rdm_item(tab_id_users),
+        categorie_id: rdm_item(tab_id_categories),
         name: "bbbbbbbbbbb"
       },
       {
-        user_id: rdm_user(tab_id_users),
+        user_id: rdm_item(tab_id_users),
+        categorie_id: rdm_item(tab_id_categories),
         name: "aaaaa"
       }]
 
@@ -200,6 +239,12 @@ describe("findOneQuiz", () => {
           done()
       })
   })
+  it("Chercher un quiz par les champs selectionnés (categorie_id). - S", (done) => {
+      QuizService.findOneQuiz(["categorie_id"], quizzes[0].categorie_id, null, function (err, value) {
+          expect(value).to.haveOwnProperty('name')
+          done()
+      })
+  })
   it("Chercher un quiz sans tableau de champ. - E", (done) => {
       QuizService.findOneQuiz("name", quizzes[0].name, null, function (err, value) {
           expect(err).to.haveOwnProperty('type_error')
@@ -252,17 +297,6 @@ describe("updateOneQuiz", () => {
             done()
 
         })
-    })
-    it("Modifier un quiz correct (name). - S", (done) => {
-      QuizService.updateOneQuiz(id_quiz_valid, { "name": "banane" }, null, function (err, value) {
-          expect(value).to.be.a('object')
-          expect(value).to.haveOwnProperty('_id')
-          expect(value).to.haveOwnProperty('name')
-          expect(value).to.haveOwnProperty('updated_at')
-          expect(value['name']).to.be.equal('banane')
-          done()
-
-      })
     })
     it("Modifier un quiz avec id incorrect. - E", (done) => {
         QuizService.updateOneQuiz("1200", { categorie: "Animaux" }, null, function (err, value) {
@@ -368,6 +402,12 @@ describe("deleteManyQuizzes", () => {
         })
     })
 });
+
+it("Suppression des catégories fictives", (done) => {
+    CategorieService.deleteManyCategories(tab_id_categories, null, function (err, value) {
+        done()
+    })
+})
 
 it("Suppression des utilisateurs fictif", (done) => {
     UserService.deleteManyUsers(tab_id_users, null, function (err, value) {

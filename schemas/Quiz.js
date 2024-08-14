@@ -7,6 +7,11 @@ const QuizSchema = mongoose.Schema({
     ref: 'User',
     required: true
   },
+  categorie_id: {
+    type: ObjectId,
+    ref: 'Categorie',
+    required: true
+  },
   name: {
     type: String,
     required: true,

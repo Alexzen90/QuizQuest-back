@@ -54,7 +54,7 @@ describe("POST - /login", () => {
     })
 })
 
-function rdm_user(tab) {
+function rdm_item(tab) {
     let rdm_id = tab[Math.floor(Math.random() * (tab.length - 1))]
     return rdm_id
 }
@@ -65,7 +65,7 @@ chai.use(chaiHttp)
 describe("POST - /categorie", () => {
     it("Ajouter une categorie. - S", (done) => {
         chai.request(server).post('/categorie').auth(token, { type: 'bearer' }).send({
-            user_id: rdm_user(tab_id_users),
+            user_id: rdm_item(tab_id_users),
             name: "voiture",
         }).end((err, res) => {
             expect(res).to.have.status(201)
@@ -75,7 +75,7 @@ describe("POST - /categorie", () => {
     })
     it("Ajouter une categorie incorrect. (Sans name) - E", (done) => {
         chai.request(server).post('/categorie').send({
-            user_id: rdm_user(tab_id_users),
+            user_id: rdm_item(tab_id_users),
         })
         .auth(token, { type: 'bearer' })
         .end((err, res) => {
@@ -85,7 +85,7 @@ describe("POST - /categorie", () => {
     })
     it("Ajouter une categorie incorrect. (Avec un champ vide) - E", (done) => {
         chai.request(server).post('/categorie').send({
-            user_id: rdm_user(tab_id_users),
+            user_id: rdm_item(tab_id_users),
             name: "",
         })
         .auth(token, { type: 'bearer' })
@@ -100,15 +100,15 @@ describe("POST - /categories", () => {
     it("Ajouter des categories. - S", (done) => {
         chai.request(server).post('/categories').auth(token, { type: 'bearer' }).send([
             {
-                user_id: rdm_user(tab_id_users),
+                user_id: rdm_item(tab_id_users),
                 name: "voitureaufromage"
             },
             {
-                user_id: rdm_user(tab_id_users),
+                user_id: rdm_item(tab_id_users),
                 name: "piscine"
             },
             {
-                user_id: rdm_user(tab_id_users),
+                user_id: rdm_item(tab_id_users),
                 name: "helicopter"
             },
         ]).end((err, res) => {
@@ -120,10 +120,10 @@ describe("POST - /categories", () => {
     it("Ajouter des categories incorrecte. - E", (done) => {
         chai.request(server).post('/categories').auth(token, { type: 'bearer' }).send([
             {
-                user_id: rdm_user(tab_id_users),
+                user_id: rdm_item(tab_id_users),
             },
             {
-                user_id: rdm_user(tab_id_users),
+                user_id: rdm_item(tab_id_users),
                 name: "velociraptor",
             }
         ]).end((err, res) => {
@@ -134,15 +134,15 @@ describe("POST - /categories", () => {
     it("Ajouter des categories sans etre authentifié. - E", (done) => {
         chai.request(server).post('/categories').send([
             {
-                user_id: rdm_user(tab_id_users),
+                user_id: rdm_item(tab_id_users),
                 name: "voitureagaz",
             },
             {
-                user_id: rdm_user(tab_id_users),
+                user_id: rdm_item(tab_id_users),
                 name: "veloaroulette",
             },
             {
-                user_id: rdm_user(tab_id_users),
+                user_id: rdm_item(tab_id_users),
                 name: "avion",
             },
         ]).end((err, res) => {

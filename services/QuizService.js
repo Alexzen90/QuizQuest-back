@@ -124,7 +124,7 @@ module.exports.findOneQuizById = function (quiz_id, options, callback) {
 }
 
 module.exports.findManyQuizzesById = function (quizzes_id, options, callback) {
-    let opts = {populate: (options && options.populate ? ['user_id'] : []), lean: true}
+    let opts = {populate: (options && options.populate ? ['user_id', 'categorie_id'] : []), lean: true}
 
     if (quizzes_id && Array.isArray(quizzes_id) && quizzes_id.length > 0 && quizzes_id.filter((e) => { return mongoose.isValidObjectId(e) }).length == quizzes_id.length) {
         quizzes_id = quizzes_id.map((e) => { return new ObjectId(e) })
@@ -156,7 +156,7 @@ module.exports.findManyQuizzesById = function (quizzes_id, options, callback) {
 
 module.exports.findOneQuiz = function (tab_field, value, options, callback) {
     let opts = {populate: options && options.populate ? ['user_id', 'categorie_id'] : []}
-    var field_unique = ['name']
+    var field_unique = ['name', 'categorie_id']
 
     if (tab_field && Array.isArray(tab_field) && value && _.filter(tab_field, (e) => { return field_unique.indexOf(e) == -1}).length == 0) {
         var obj_find = []
@@ -194,14 +194,27 @@ module.exports.findOneQuiz = function (tab_field, value, options, callback) {
 }
 
 module.exports.findManyQuizzes = function(search, limit, page, options, callback) {
-    let populate = options && options.populate ? ['user_id'] : []
+    let populate = options && options.populate ? ['user_id', 'categorie_id'] : []
     page = !page ? 1 : parseInt(page)
     limit = !limit ? 10 : parseInt(limit)
 
     if (typeof page !== "number" || typeof limit !== "number" || isNaN(page) || isNaN(limit)) {
         callback ({msg: `format de ${typeof page !== "number" ? "page" : "limit"} est incorrect`, type_error: "no-valid"})
     }else{
-        let query_mongo = search ? {$or: _.map(["name"], (e) => {return {[e]: {$regex: search}}})} : {}
+        let query_mongo = {}        
+        if (mongoose.isValidObjectId(search)) {
+            query_mongo = {
+                $or: [
+                    { categorie_id: new ObjectId(search) },
+                    { user_id: new ObjectId(search) }
+                ]
+            };
+        } else {
+            if (typeof search !== 'string') {
+                search = String(search);
+              }
+            query_mongo["name"] = { $regex: search, $options: 'i' };
+        }
         Quiz.countDocuments(query_mongo).then((value) => {
             if (value > 0) {
                 const skip = ((page - 1) * limit)

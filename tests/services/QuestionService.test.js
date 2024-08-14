@@ -78,7 +78,7 @@ it("Création des utilisateurs fictif", (done) => {
 
 it("Création des catégories fictives", (done) => {
     categories = _.map(categories, (e) => {
-        e.user_id = rdm_user(tab_id_users)
+        e.user_id = rdm_item(tab_id_users)
         return e
     })
   CategorieService.addManyCategories(categories, null, function (err, value) {
@@ -89,7 +89,7 @@ it("Création des catégories fictives", (done) => {
 
 it("Création des quizzes fictifs", (done) => {
     quizzes = _.map(quizzes, (e) => {
-        e.user_id = rdm_user(tab_id_users)
+        e.user_id = rdm_item(tab_id_users)
         return e
     })
     QuizService.addManyQuizzes(quizzes, null, function (err, value) {
@@ -105,17 +105,7 @@ it("Authentification d'un utilisateur fictif.", (done) => {
     })
 })
 
-function rdm_user (tab) {
-    let rdm_id = tab[Math.floor(Math.random() * (tab.length - 1))]
-    return rdm_id
-}
-
-function rdm_categorie (tab) {
-    let rdm_id = tab[Math.floor(Math.random() * (tab.length - 1))]
-    return rdm_id
-}
-
-function rdm_quiz (tab) {
+function rdm_item (tab) {
     let rdm_id = tab[Math.floor(Math.random() * (tab.length - 1))]
     return rdm_id
 }
@@ -123,9 +113,9 @@ function rdm_quiz (tab) {
 describe("addOneQuestion", () => {
     it("Question correct. - S", (done) => {
         var question = {
-            user_id: rdm_user(tab_id_users),
-            categorie_id: rdm_categorie(tab_id_categories),
-            quiz_id: rdm_quiz(tab_id_quizzes),
+            user_id: rdm_item(tab_id_users),
+            categorie_id: rdm_item(tab_id_categories),
+            quiz_id: rdm_item(tab_id_quizzes),
             question: "Quel animal est Sonic ?",
             difficulty: "Facile",
             correct_answer: "Un hérisson",
@@ -148,9 +138,9 @@ describe("addOneQuestion", () => {
     })
     it("Question incorrect. (Sans question) - E", (done) => {
         var question_no_valid = {
-          user_id: rdm_user(tab_id_users),
-          categorie_id: rdm_categorie(tab_id_categories),
-          quiz_id: rdm_quiz(tab_id_quizzes),
+          user_id: rdm_item(tab_id_users),
+          categorie_id: rdm_item(tab_id_categories),
+          quiz_id: rdm_item(tab_id_quizzes),
           difficulty: "Facile",
           correct_answer: "Un hérisson",
           incorrect_answers: ["Un dragon", "Un lapin", "Un chien"]
@@ -165,9 +155,9 @@ describe("addOneQuestion", () => {
     })
     it("Question incorrect. (question vide) - E", (done) => {
         var question_no_valid = {
-          user_id: rdm_user(tab_id_users),
-          categorie_id: rdm_categorie(tab_id_categories),
-          quiz_id: rdm_quiz(tab_id_quizzes),
+          user_id: rdm_item(tab_id_users),
+          categorie_id: rdm_item(tab_id_categories),
+          quiz_id: rdm_item(tab_id_quizzes),
           question: "",
           difficulty: "Facile",
           correct_answer: "Un hérisson",
@@ -187,26 +177,26 @@ describe("addOneQuestion", () => {
 describe("addManyQuestions", () => {
     it("Questions à ajouter, valide. - S", (done) => {
         var questions_tab = [{
-          user_id: rdm_user(tab_id_users),
-          categorie_id: rdm_categorie(tab_id_categories),
-          quiz_id: rdm_quiz(tab_id_quizzes),
+          user_id: rdm_item(tab_id_users),
+          categorie_id: rdm_item(tab_id_categories),
+          quiz_id: rdm_item(tab_id_quizzes),
           question: "Qui est le réalisateur du film d'animation 'Your Name' ?",
           difficulty: "Moyen",
           correct_answer: "Makoto Shinkai",
           incorrect_answers: ["Hayao Miyazaki", "Mamoru Hosoda", "Satoshi Kon"]
         }, {
-          user_id: rdm_user(tab_id_users),
-          categorie_id: rdm_categorie(tab_id_categories),
-          quiz_id: rdm_quiz(tab_id_quizzes),
+          user_id: rdm_item(tab_id_users),
+          categorie_id: rdm_item(tab_id_categories),
+          quiz_id: rdm_item(tab_id_quizzes),
           question: "Dans l'Attaque des Titans quel est le nom du district où vivaient Eren, Mikasa et Armin avant l'attaque du Titan Colossal ?",
           difficulty: "Difficile",
           correct_answer: "District de Shinganshina",
           incorrect_answers: ["District de Trost", "District de Karanes", "District de Stohess"]
         },
         {
-          user_id: rdm_user(tab_id_users),
-          categorie_id: rdm_categorie(tab_id_categories),
-          quiz_id: rdm_quiz(tab_id_quizzes),
+          user_id: rdm_item(tab_id_users),
+          categorie_id: rdm_item(tab_id_categories),
+          quiz_id: rdm_item(tab_id_quizzes),
           question: "Dans One Piece, quel est le nom du fruit du démon que mange le personnage principal Luffy ?",
           difficulty: "Facile",
           correct_answer: "Gomu Gomu no Mi",
@@ -222,26 +212,26 @@ describe("addManyQuestions", () => {
     })
     it("Questions à ajouter, non valide. (Question vide) - E", (done) => {
         var questions_tab_error = [{
-          user_id: rdm_user(tab_id_users),
-          categorie_id: rdm_categorie(tab_id_categories),
-          quiz_id: rdm_quiz(tab_id_quizzes),
+          user_id: rdm_item(tab_id_users),
+          categorie_id: rdm_item(tab_id_categories),
+          quiz_id: rdm_item(tab_id_quizzes),
           question: "",
           difficulty: "Facile",
           correct_answer: "Gomu Gomu no Mi",
           incorrect_answers: ["Mera Mera no Mi", "Bara Bara no Mi", "Gura Gura no Mi"]
         }, {
-          user_id: rdm_user(tab_id_users),
-          categorie_id: rdm_categorie(tab_id_categories),
-          quiz_id: rdm_quiz(tab_id_quizzes),
+          user_id: rdm_item(tab_id_users),
+          categorie_id: rdm_item(tab_id_categories),
+          quiz_id: rdm_item(tab_id_quizzes),
           question: "ahahaha",
           difficulty: "Facile",
           correct_answer: "Gomu Gomu no Mi",
           incorrect_answers: ["Mera Mera no Mi", "Bara Bara no Mi", "Gura Gura no Mi"]
         },
         {
-          user_id: rdm_user(tab_id_users),
-          categorie_id: rdm_categorie(tab_id_categories),
-          quiz_id: rdm_quiz(tab_id_quizzes),
+          user_id: rdm_item(tab_id_users),
+          categorie_id: rdm_item(tab_id_categories),
+          quiz_id: rdm_item(tab_id_quizzes),
           question: "salut",
           difficulty: "Facile",
           correct_answer: "Gomu Gomu no Mi",

@@ -5,7 +5,7 @@ const LoggerHttp = require ('../utils/logger').http
 module.exports.addOneQuiz = function(req, res) {
     LoggerHttp(req, res)
     req.log.info("Création d'un quiz")
-    let options = {user: req.user}
+    let options = {user: req.user, categorie: req.query.categorie_id}
 
     QuizService.addOneQuiz(req.body, options, function(err, value) {
         if (err && err.type_error == "no found") {

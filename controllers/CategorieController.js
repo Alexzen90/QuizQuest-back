@@ -127,7 +127,7 @@ module.exports.findOneCategorie = function(req, res){
     })
 }
 
-// La fonction permet de chercher plusieurs utilisateurs
+// La fonction permet de chercher plusieurs catégories
 module.exports.findManyCategories = function(req, res) {
     req.log.info("Recherche de plusieurs categories")
     let page = req.query.page

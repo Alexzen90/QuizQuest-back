@@ -49,7 +49,7 @@ it("Authentification d'un utilisateur fictif.", (done) => {
     })
 })
 
-function rdm_user (tab) {
+function rdm_item (tab) {
     let rdm_id = tab[Math.floor(Math.random() * (tab.length - 1))]
     return rdm_id
 }
@@ -57,7 +57,7 @@ function rdm_user (tab) {
 describe("addOneCategorie", () => {
     it("Categorie correct. - S", (done) => {
         var categorie = {
-            user_id: rdm_user(tab_id_users),
+            user_id: rdm_item(tab_id_users),
             name: "test"
         }
         CategorieService.addOneCategorie(categorie, null, function(err, value) {
@@ -71,7 +71,7 @@ describe("addOneCategorie", () => {
     })
     it("Categorie incorrect. (Sans name) - E", (done) => {
         var categorie_no_valid = {
-            user_id: rdm_user(tab_id_users)
+            user_id: rdm_item(tab_id_users)
         }
         CategorieService.addOneCategorie(categorie_no_valid,  null, function (err, value) {
             expect(err).to.haveOwnProperty('msg')
@@ -85,7 +85,7 @@ describe("addOneCategorie", () => {
     })
     it("Categorie incorrect. (name vide) - E", (done) => {
         var categorie_no_valid = {
-            user_id: rdm_user(tab_id_users),
+            user_id: rdm_item(tab_id_users),
             name: ""
         }
         CategorieService.addOneCategorie(categorie_no_valid, null, function (err, value) {
@@ -102,14 +102,14 @@ describe("addOneCategorie", () => {
 describe("addManyCategories", () => {
     it("Categories à ajouter, valide. - S", (done) => {
         var categories_tab = [{
-            user_id: rdm_user(tab_id_users),
+            user_id: rdm_item(tab_id_users),
             name: "cinema"
         }, {
-            user_id: rdm_user(tab_id_users),
+            user_id: rdm_item(tab_id_users),
             name: "voiture",
         },
         {
-            user_id: rdm_user(tab_id_users),
+            user_id: rdm_item(tab_id_users),
             name: "jeuxvideo",
         }]
 
@@ -122,14 +122,14 @@ describe("addManyCategories", () => {
     })
     it("Categories à ajouter, non valide. (Name vide) - E", (done) => {
         var categories_tab_error = [{
-            user_id: rdm_user(tab_id_users),
+            user_id: rdm_item(tab_id_users),
             name: "fourchette",
         }, {
-            user_id: rdm_user(tab_id_users),
+            user_id: rdm_item(tab_id_users),
             name: "couteau",
         },
         {
-            user_id: rdm_user(tab_id_users),
+            user_id: rdm_item(tab_id_users),
             name: "",
         }]
 
