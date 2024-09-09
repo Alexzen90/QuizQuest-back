@@ -1,0 +1,41 @@
+services:
+  api-quizquest:
+    platform: ${DOCKER_PLATFORM}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: api-quizquest
+    volumes:
+      - .:/app
+    environment:
+      - PORT=${PORT}
+      - SECRET_KEY=${SECRET_KEY}
+      - SECRET_COOKIE=${SECRET_COOKIE}
+      - CHOKIDAR_USEPOLLING=true
+    ports:
+      - ${PORT}:${PORT}
+    networks:
+      - quizquest-network
+    depends_on:
+      - mongodb-quizquest
+    restart: always
+
+  mongodb-quizquest:
+    image: mongo:latest
+    container_name: mongodb-quizquest
+    volumes:
+      - ./mongo-data:/data/db
+    networks:
+      - quizquest-network
+    ports:
+      - ${PORT_BDD}:${PORT_BDD}
+    expose:
+      - ${PORT_BDD}
+
+networks:
+  quizquest-network:
+    driver: bridge
+
+volumes:
+  mongo-data:

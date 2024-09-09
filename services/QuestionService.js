@@ -185,10 +185,13 @@ module.exports.findManyQuestions = function(search, limit, page, options, callba
     let populate = options && options.populate ? ['user_id', 'quiz_id', 'categorie_id'] : []
     page = !page ? 1 : parseInt(page)
     limit = !limit ? 10 : parseInt(limit)
-
+    
     if (typeof page !== "number" || typeof limit !== "number" || isNaN(page) || isNaN(limit)) {
         callback ({msg: `format de ${typeof page !== "number" ? "page" : "limit"} est incorrect`, type_error: "no-valid"})
     }else{
+        if (limit == 0) {
+            limit = null
+        }
         let query_mongo = {}
         if (mongoose.isValidObjectId(search)) {
             query_mongo = {
