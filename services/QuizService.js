@@ -32,7 +32,7 @@ module.exports.addOneQuiz = async function (quiz, options, callback) {
             callback(null, new_quiz.toObject());
         }
     } catch (error) {
-        if (error.code === 11000) { // Erreur de duplicité
+        if (error.code === 11000) { 
             var field = Object.keys(error.keyValue)[0];
             var err = {
                 msg: `Duplicate key error: ${field} must be unique.`,
@@ -42,7 +42,7 @@ module.exports.addOneQuiz = async function (quiz, options, callback) {
             };
             callback(err);
         } else {
-            callback(error); // Autres erreurs
+            callback(error);
         }
     }
 };

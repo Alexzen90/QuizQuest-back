@@ -19,7 +19,7 @@ services:
       - quizquest-network
     depends_on:
       - mongodb-quizquest
-    restart: always
+    # restart: always
 
   mongodb-quizquest:
     image: mongo:latest
