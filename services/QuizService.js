@@ -5,7 +5,7 @@ const ObjectId = mongoose.Types.ObjectId
 
 var Quiz = mongoose.model('Quiz', QuizSchema)
 
-Quiz.createIndexes()
+// Quiz.createIndexes()
 
 module.exports.addOneQuiz = async function (quiz, options, callback) {
     try {

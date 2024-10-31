@@ -5,7 +5,7 @@ const ObjectId = mongoose.Types.ObjectId
 
 let Question = mongoose.model('Question', QuestionSchema)
 
-Question.createIndexes()
+// Question.createIndexes()
 
 module.exports.addOneQuestion = async function (question, options, callback) {
     try {

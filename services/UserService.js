@@ -8,7 +8,7 @@ const SALT_WORK_FACTOR = 10
 
 var User = mongoose.model('User', UserSchema)
 
-User.createIndexes()
+// User.createIndexes()
 
 module.exports.loginUser = async function (username, password, options, callback) {
     module.exports.findOneUser(['username'], username, null, async (err, value) => {

@@ -5,7 +5,7 @@ const ObjectId = mongoose.Types.ObjectId
 
 var Categorie = mongoose.model('Categorie', CategorieSchema)
 
-Categorie.createIndexes()
+// Categorie.createIndexes()
 
 module.exports.addOneCategorie = async function (categorie, options, callback) {
     try {

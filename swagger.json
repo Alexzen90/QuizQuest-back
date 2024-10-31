@@ -280,10 +280,6 @@
         "description": "Operations about user"
       },
       {
-        "name": "Login",
-        "description": "Operations about authentification"
-      },
-      {
         "name": "Quiz",
         "description": "Operations about Quiz"
       },

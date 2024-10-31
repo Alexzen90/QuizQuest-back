@@ -161,9 +161,7 @@
  *              description : Internal server error
  */
 
-
 /**
-* 
  * @swagger
  * /user:
  *  delete:
