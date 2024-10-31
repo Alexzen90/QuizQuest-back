@@ -24,10 +24,10 @@ const userSchema = mongoose.Schema({
     type: Boolean,
     default: false
   },
-  profile_pic: {
-    type: String,
-    default: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
-  },
+  // profile_pic: {
+  //   type: String,
+  //   default: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+  // },
   created_at: {
     type: Date,
     default: new Date(),
@@ -35,10 +35,10 @@ const userSchema = mongoose.Schema({
   updated_at: {
     type: Date
   },
-  status: {
-    type: Boolean,
-    default: false
-  },
+  // status: {
+  //   type: Boolean,
+  //   default: false
+  // },
   token: {
     type: String
   }

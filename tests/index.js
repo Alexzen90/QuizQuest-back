@@ -26,19 +26,19 @@ const mongoose = require('mongoose')
 //   require('./controllers/QuestionController.test')
 // })
 
-// describe("QuizService", () => {
-//   require('./services/QuizService.test') 
-// })
+describe("QuizService", () => {
+  require('./services/QuizService.test') 
+})
 
 describe("QuizController", () => {
   require('./controllers/QuizController.test')
 })
 
-// describe("API - Mongo", () => {
-//   it("vider les dbs. -S", () => {
-//     if (process.env.npm_lifecycle_event == 'test') {
-//       mongoose.connection.db.dropDatabase()
-//     }
-//   })
-// })
+describe("API - Mongo", () => {
+  it("vider les dbs. -S", () => {
+    if (process.env.npm_lifecycle_event == 'test') {
+      mongoose.connection.db.dropDatabase()
+    }
+  })
+})
 

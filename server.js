@@ -3,6 +3,7 @@ const _ = require("lodash")
 const bodyParser = require('body-parser')
 const Config = require ('./config')
 const Logger = require('./utils/logger').pino
+
 const swaggerJsdoc = require('swagger-jsdoc')
 const swaggerUi = require('swagger-ui-express')
 
@@ -12,8 +13,7 @@ const app = express()
 // Configuration Swagger
 const swaggerOptions = require('./swagger.json');
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve,
-swaggerUi.setup(swaggerDocs));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Démarrage de la database
 require('./utils/database')
@@ -40,11 +40,13 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
+// Importation des controllers
 const UserController = require('./controllers/UserController')
 const CategorieController = require('./controllers/CategorieController')
 const QuestionController = require('./controllers/QuestionController')
 const QuizController = require('./controllers/QuizController')
 
+// Importation des middlewares
 const DatabaseMiddleware = require('./middlewares/database')
 const LoggerMiddleware = require('./middlewares/logger')
 
@@ -129,7 +131,7 @@ app.post('/questions', DatabaseMiddleware.checkConnection, passport.authenticate
 // Création du endpoint /question pour la récupération d'une question via l'id
 app.get('/question/:id', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuestionController.findOneQuestionById)
 
-// Création du endpoint /questions pour la récupération de plusieurs questions via l'idS
+// Création du endpoint /questions pour la récupération de plusieurs questions
 app.get('/questions', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuestionController.findManyQuestionsById)
 
 app.get('/question', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuestionController.findOneQuestion)
@@ -153,13 +155,13 @@ app.delete('/questions', DatabaseMiddleware.checkConnection, passport.authentica
 // Création du endpoint /quiz pour l'ajout d'un quiz
 app.post('/quiz', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuizController.addOneQuiz)
 
-// Création du endpoint /quizs pour l'ajout de plusieurs quizzes
+// Création du endpoint /quizzes pour l'ajout de plusieurs quiz
 app.post('/quizzes', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuizController.addManyQuizzes)
 
 // Création du endpoint /quiz pour la récupération d'un quiz via l'id
 app.get('/quiz/:id', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuizController.findOneQuizById)
 
-// Création du endpoint /quizs pour la récupération de plusieurs quizzes via l'idS
+// Création du endpoint /quizzes pour la récupération de plusieurs quiz via leur id
 app.get('/quizzes', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuizController.findManyQuizzesById)
 
 app.get('/quiz', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), QuizController.findOneQuiz)

@@ -44,10 +44,27 @@
               "description": "The user's password",
               "example": "secret"
             },
+            "name": {
+              "type": "string",
+              "description": "The user's name",
+              "example": "John Doe"
+            },
             "token": {
               "type": "string",
               "description": "An optional token for the user",
               "example": "somerandomtoken"
+            },
+            "created_at":{
+              "type": "string",
+              "format": "date-time",
+              "description": "Date when the user was created",
+              "example" :"2024-01-01T00:00:00Z"
+            },
+            "updated_at":{
+              "type": "string",
+              "format": "date-time",
+              "description": "Date when the user was modified",
+              "example" :"2024-01-01T00:00:00Z"
             }
           }
         },
@@ -55,17 +72,8 @@
           "type": "object",
           "required": [
             "name",
-            "categorie",
-            "question1",
-            "question2",
-            "question3",
-            "question4",
-            "question5",
-            "question6",
-            "question7",
-            "question8",
-            "question9",
-            "question10"
+            "categorie_id",
+            "user_id"
           ],
           "properties": {
             "name": {
@@ -73,141 +81,27 @@
               "description": "The quiz's name",
               "example": "Quiz sur les vacances"
             },
-            "categorie": {
+            "categorie_id": {
               "type": "string",
-              "description": "The quiz's theme",
-              "example": "Animaux"
+              "description": "The id of the category associated with the quiz",
+              "example": "66a75cbd8b18880971f52fe4"
             },
-            "question1": {
-              "type": "object",
-              "description": "Question 1",
-              "example": {
-                "created_by": "johndoe",
-                "question": "De quelle couleur est le ciel ?",
-                "correct_answer": "Bleu",
-                "incorrect_answers": [
-                  "Rouge",
-                  "Vert",
-                  "Jaune"
-                ]
-              }
-            },"question2": {
-              "type": "object",
-              "description": "Question 2",
-              "example": {
-                "created_by": "johndoe",
-                "question": "De quelle couleur est le ciel ?",
-                "correct_answer": "Bleu",
-                "incorrect_answers": [
-                  "Rouge",
-                  "Vert",
-                  "Jaune"
-                ]
-              }
-            },"question3": {
-              "type": "object",
-              "description": "Question 3",
-              "example": {
-                "created_by": "johndoe",
-                "question": "De quelle couleur est le ciel ?",
-                "correct_answer": "Bleu",
-                "incorrect_answers": [
-                  "Rouge",
-                  "Vert",
-                  "Jaune"
-                ]
-              }
-            },"question4": {
-              "type": "object",
-              "description": "Question 4",
-              "example": {
-                "created_by": "johndoe",
-                "question": "De quelle couleur est le ciel ?",
-                "correct_answer": "Bleu",
-                "incorrect_answers": [
-                  "Rouge",
-                  "Vert",
-                  "Jaune"
-                ]
-              }
-            },"question5": {
-              "type": "object",
-              "description": "Question 5",
-              "example": {
-                "created_by": "johndoe",
-                "question": "De quelle couleur est le ciel ?",
-                "correct_answer": "Bleu",
-                "incorrect_answers": [
-                  "Rouge",
-                  "Vert",
-                  "Jaune"
-                ]
-              }
-            },"question6": {
-              "type": "object",
-              "description": "Question 6",
-              "example": {
-                "created_by": "johndoe",
-                "question": "De quelle couleur est le ciel ?",
-                "correct_answer": "Bleu",
-                "incorrect_answers": [
-                  "Rouge",
-                  "Vert",
-                  "Jaune"
-                ]
-              }
-            },"question7": {
-              "type": "object",
-              "description": "Question 7",
-              "example": {
-                "created_by": "johndoe",
-                "question": "De quelle couleur est le ciel ?",
-                "correct_answer": "Bleu",
-                "incorrect_answers": [
-                  "Rouge",
-                  "Vert",
-                  "Jaune"
-                ]
-              }
-            },"question8": {
-              "type": "object",
-              "description": "Question 8",
-              "example": {
-                "created_by": "johndoe",
-                "question": "De quelle couleur est le ciel ?",
-                "correct_answer": "Bleu",
-                "incorrect_answers": [
-                  "Rouge",
-                  "Vert",
-                  "Jaune"
-                ]
-              }
-            },"question9": {
-              "type": "object",
-              "description": "Question 9",
-              "example": {
-                "created_by": "johndoe",
-                "question": "De quelle couleur est le ciel ?",
-                "correct_answer": "Bleu",
-                "incorrect_answers": [
-                  "Rouge",
-                  "Vert",
-                  "Jaune"
-                ]
-              }
-            },"question10": {
-              "type": "object",
-              "description": "Question 10",
-              "example": {
-                "created_by": "johndoe",
-                "question": "De quelle couleur est le ciel ?",
-                "correct_answer": "Bleu",
-                "incorrect_answers": [
-                  "Rouge",
-                  "Vert",
-                  "Jaune"
-                ]
-              }
+            "user_id": {
+              "type": "string",
+              "description": "The id of the user that created the quiz",
+              "example": "66a75cbd8b18880971f52fe4"
+            },
+            "created_at":{
+              "type": "string",
+              "format": "date-time",
+              "description": "Date when the quiz was created",
+              "example" :"2024-01-01T00:00:00Z"
+            },
+            "updated_at":{
+              "type": "string",
+              "format": "date-time",
+              "description": "Date when the quiz was modified",
+              "example" :"2024-01-01T00:00:00Z"
             }
           }
         },
@@ -224,6 +118,75 @@
               "type": "string",
               "description": "The user's password",
               "example": "secret"
+            }
+          }
+        },
+        "Categorie": {
+          "type": "object",
+          "required": ["name", "user_id"],
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The category's name",
+              "example": "Vacances"
+            },
+            "user_id": {
+              "type": "string",
+              "description": "The id of the user that created the category",
+              "example": "66a75cbd8b18880971f52fe4"
+            },
+            "created_at":{
+              "type": "string",
+              "format": "date-time",
+              "description": "Date when the category was created",
+              "example" :"2024-01-01T00:00:00Z"
+            },
+            "updated_at":{
+              "type": "string",
+              "format": "date-time",
+              "description": "Date when the category was modified",
+              "example" :"2024-01-01T00:00:00Z"
+            }
+          }
+        },
+        "Question": {
+          "type": "object",
+          "required": ["user_id", "categorie_id", "quiz_id", "question", "difficulty", "correct_answer", "incorrect_answers"],
+          "properties": {
+            "user_id": {
+              "type": "string",
+              "description": "The id of the user that created the question",
+              "example": "66a75cbd8b18880971f52fe4"
+            },
+            "quiz_id": {
+              "type": "string",
+              "description": "The id of the quiz associated with the question",
+              "example": "66a75cbd8b18880971f52fe4"
+            },
+            "categorie_id": {
+              "type": "string",
+              "description": "The id of the category associated with the question",
+              "example": "66a75cbd8b18880971f52fe4"
+            },
+            "question": {
+              "type": "string",
+              "description": "The question",
+              "example": "Quelle est la capitale de la France ?"
+            },
+            "difficulty": {
+              "type": "string",
+              "description": "The difficulty level of the question",
+              "example": "easy"
+            },
+            "correct_answer": {
+              "type": "string",
+              "description": "The correct answer to the question",
+              "example": "Paris"
+            },
+            "incorrect_answers": {
+              "type": "array",
+              "description": "The incorrect answers to the question",
+              "example": ["Lyon", "Marseille", "Nantes"]
             }
           }
         }
@@ -288,6 +251,26 @@
               }
             }
           }
+        },
+        "UnauthorizedError": {
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type_error": {
+                    "type": "string",
+                    "example": "unauthorized"
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Unauthorized"
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -302,9 +285,17 @@
       },
       {
         "name": "Quiz",
-        "description": "Operations about quiz creation"
+        "description": "Operations about Quiz"
+      },
+      {
+        "name": "Categorie",
+        "description": "Operations about Categorie"
+      },
+      {
+        "name": "Question",
+        "description": "Operations about Question"
       }
     ]
   },
-  "apis": ["./controllers/*.js"]
+  "apis": ["./SwaggerDocs/*.js"]
 }

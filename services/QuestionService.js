@@ -3,7 +3,7 @@ const _ = require('lodash')
 const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId
 
-var Question = mongoose.model('Question', QuestionSchema)
+let Question = mongoose.model('Question', QuestionSchema)
 
 Question.createIndexes()
 

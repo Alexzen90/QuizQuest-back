@@ -44,7 +44,7 @@ module.exports.addManyQuizzes = function(req, res) {
     })
 }
 
-// La fonction permet de chercher un quiz
+// La fonction permet de chercher un quiz par son id
 module.exports.findOneQuizById = function(req, res) {
     req.log.info("Recherche d'un quiz par son id")
     let opts = {populate: req.query.populate}
