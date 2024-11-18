@@ -95,6 +95,7 @@ it("Création des catégories fictives", (done) => {
 it("Création des quizzes fictifs", (done) => {
     quizzes = _.map(quizzes, (e) => {
         e.user_id = rdm_item(tab_id_users)
+        e.categorie_id = rdm_item(tab_id_categories)
         return e
     })
     QuizService.addManyQuizzes(quizzes, null, function (err, value) {

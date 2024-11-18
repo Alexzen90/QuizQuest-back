@@ -19,7 +19,8 @@ const QuestionSchema = mongoose.Schema({
   },
   question: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   difficulty: {
     type: String,

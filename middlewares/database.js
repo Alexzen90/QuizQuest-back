@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// Middleware pour vérifier si la database est connectée
 module.exports.checkConnection = (req, res, next) => {
   if (mongoose.connection.readyState === 1) {
     req.log.info('Database connected');

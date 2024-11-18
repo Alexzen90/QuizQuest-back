@@ -128,7 +128,6 @@ module.exports.addManyUsers = async function (users, options, callback) {
 };
 
 module.exports.findOneUserById = function (user_id, options, callback) {
-    
     if (user_id && mongoose.isValidObjectId(user_id)) {
         User.findById(user_id).then((value) => {
             try {

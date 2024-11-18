@@ -86,17 +86,20 @@ describe("POST - /login", () => {
 })
 
 
-
 chai.use(chaiHttp)
 
 
 describe("POST - /quiz", () => {
     it("Ajouter un quiz. - S", (done) => {
-        chai.request(server).post('/quiz').auth(token, { type: 'bearer' }).send({
+        chai.request(server)
+        .post('/quiz')
+        .auth(token, { type: 'bearer' })
+        .send({
           user_id: rdm_item(tab_id_users),
           categorie_id: rdm_item(tab_id_categories),
           name: "Quiz sur Naruto",
-        }).end((err, res) => {
+        })
+        .end((err, res) => {
             console.log(res.body)
             expect(res).to.have.status(201)
             quizzes.push(res.body)
@@ -231,7 +234,9 @@ describe("GET - /quiz/:id", () => {
 
 describe("GET - /quizzes", () => {
     it("Chercher plusieurs quizzes. - S", (done) => {
-        chai.request(server).get('/quizzes').query({id: _.map(quizzes, '_id')})
+        chai.request(server)
+        .get('/quizzes')
+        .query({id: _.map(quizzes, '_id')})
         .auth(token, { type: 'bearer' })
         .end((err, res) => {
             res.should.have.status(200)
@@ -311,7 +316,7 @@ describe("PUT - /quiz", () => {
 
 describe("PUT - /quizzes", () => {
   it("Modifier plusieurs quizzes. - S", (done) => {
-      chai.request(server).put('/quizzes').query({id: _.map(quizzes, '_id')}).send({ category_id: rdm_item(categories)._id })
+      chai.request(server).put('/quizzes').query({id: _.map(quizzes, '_id')}).send({ categorie_id: rdm_item(categories)._id })
       .auth(token, { type: 'bearer' })
       .end((err, res) => {
           res.should.have.status(200)
@@ -319,7 +324,7 @@ describe("PUT - /quizzes", () => {
       })
   })
   it("Modifier plusieurs quizzes sans etre authentifié. - E", (done) => {
-      chai.request(server).put('/quizzes').query({id: _.map(quizzes, '_id')}).send({ category_id: rdm_item(categories)._id })
+      chai.request(server).put('/quizzes').query({id: _.map(quizzes, '_id')}).send({ categorie_id: rdm_item(categories)._id })
       .end((err, res) => {
           res.should.have.status(401)
           done()

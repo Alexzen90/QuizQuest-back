@@ -21,6 +21,8 @@
  *                  application/json:
  *                      schema:
  *                          $ref: '#/components/schemas/Quiz'
+ *          401: 
+ *              $ref: '#/components/responses/UnauthorizedError'
  *          404:
  *              $ref: '#/components/responses/NotFound'
  *          405:

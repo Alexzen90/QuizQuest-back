@@ -64,7 +64,7 @@ app.post('/logout', DatabaseMiddleware.checkConnection, passport.authenticate('j
 // Création du endpoint /user pour l'ajout d'un utilisateur
 app.post('/user', DatabaseMiddleware.checkConnection, UserController.addOneUser)
 
-// Création du endpoint /user pour l'ajout de plusieurs utilisateurs
+// Création du endpoint /users pour l'ajout de plusieurs utilisateurs
 app.post('/users', DatabaseMiddleware.checkConnection, passport.authenticate('jwt', { session: false }), UserController.addManyUsers)
 
 // Création du endpoint /user pour la récupération d'un utilisateur par le champ selectionné
